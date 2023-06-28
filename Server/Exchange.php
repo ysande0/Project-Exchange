@@ -148,13 +148,6 @@ if(!$query)
         $game->title = $arr['title'];
         $game->platform = $arr['platform'];
 
-/*
-        $firebase_notifcation = new Message();
-        $firebase_notifcation->recipient($user->access_token, $user->first_name . ' ' . $user->last_name);
-        $firebase_notifcation->compose('New Match: ' . $game->title . ' : ' . $game->platform);
-        $firebase_notifcation->send();
-*/
-
         $response['name'] = $user->first_name . ' ' . $user->last_name;
         $response['uid'] = $user->uid;
         $response['title'] = $game->title;
@@ -178,7 +171,6 @@ if(sizeof($exchange_response) === 0){
 
 $exchange_response = json_encode($exchange_response);
 echo $exchange_response;
-//print_r($query_arr);
 // Send requested user notifcation.
 
 // Send other users notifcations as well. 
