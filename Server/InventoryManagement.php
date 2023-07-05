@@ -1,18 +1,6 @@
 <?php
 
-/*
- * 1 - Insert
- * 2 - Delete
- * 3 - Update
- *
- * 100 - Hardware
- * 101 - Software
- *
- * */
-
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
-//$private_crypt_key_path = $path . "keys/cryp_key.txt";
 
 $input = file_get_contents("php://input");
 $input = json_decode($input, true);
@@ -25,11 +13,6 @@ require 'Hardware.php';
 require 'Token.php';
 require 'Inventory.php';
 
-use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
-
-
-//$crypt_key = file_get_contents($private_crypt_key_path);
 $headers = apache_request_headers();
 $pdo = null;
 $hardware = null;
@@ -40,7 +23,6 @@ $user_id = null;
 $user_token = null;
 $dpi = null;
 
-//$user_token = Crypto::decrypt($user_token, Key::loadFromAsciiSafeString($crypt_key));
 
 $user_token = $headers['Authorization'];
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -48,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $inventory_category = (int) $_GET['category'];
     $inventory_operation = (int) $_GET['ops'];
     $user_id = $_GET['id'];
-  //  $user_token = $_GET['access_token'];
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              $inventory_operation = $input['ops'];
              $user_uid = $input['uid'];
              $user_id = $input['id'];
-    //         $user_token = $input['access_token'];
 }
 
 
@@ -65,12 +45,7 @@ try{
     
     $pdo = new PDO("mysql:host=$database_host;dbname=$database_name", $database_username, $database_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-/*
-    $token = new Token($pdo);
-    $token->set_user_id($user_id);
-    $token->set_token($user_token);
-    $session_timeout = $token->is_token_expired();
-    */
+    
     if($session_timeout){
         
         echo json_encode(array("session_timeout" => true));
@@ -109,9 +84,9 @@ else if($inventory_category === 101){
     
    
             $game = new Game();
-            // Rename manufacturer to Game Publisher. Add Game Developer (Studio)
+    
         if($inventory_operation === 1){
-          // Insert
+
           
             $game->publisher = $input['publisher'];
             $game->developer = $input['developer'];
@@ -176,13 +151,10 @@ try{
     $inventory = new Inventory();  
     
     if($inventory_category === 100){
-     // Hardware    
-
         
         if($inventory_operation === 1){
             
-          //  print_r(sizeof($hardware_platforms));
-            
+
              $operation_status = $inventory->insert_hardware($pdo, $user_id, $hardware);
           
              if($operation_status === false){
@@ -268,21 +240,9 @@ try{
         $bucket = 'exchangeproject';
         
         if($inventory_operation === 1){
-            // Insert
-/*
-            $game->software_image_thumbnail_url = "http://192.168.1.242:80/Project/TheExchange%20Project/img/" . $game->image_name_thumbnail;
-            $game->software_image_full_url = "http://192.168.1.242:80/Project/TheExchange%20Project/img/" . $game->image_name_full;
-         */              
+            // Insert 
 
                     $image_file_path = null;
-                    /*
-                    $xxxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxxhdpi/";
-                    $xxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxhdpi/";
-                    $xhdpi_path = "C:/Web/Project/TheExchange Project/img/xhdpi/";
-                    $hdpi_path = "C:/Web/Project/TheExchange Project/img/hdpi/";
-                    $mdpi_path = "C:/Web/Project/TheExchange Project/img/mdpi/";
-                    $ldpi_path = "C:/Web/Project/TheExchange Project/img/ldpi/";
-                   */
                     
                     $xxxhdpi_path = "img/xxxhdpi/";
                     $xxhdpi_path = "img/xxhdpi/";
@@ -294,10 +254,7 @@ try{
                     if($dpi <= 120){
                         
                         // [LDPI]
-                        /*
-                        file_put_contents($ldpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($ldpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                       */
+                 
                         $image_file_path = $ldpi_path . $game->image_name_full;
                         $result_image_full = $client->putObject( array(
                             
@@ -322,10 +279,7 @@ try{
                     }else if($dpi > 120 && $dpi <= 160){
                         
                         // [MDPI]
-                        /*
-                        file_put_contents($mdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($mdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-        */
+           
                         $image_file_path = $mdpi_path . $game->image_name_full;
                      
                         $result_image_full = $client->putObject( array(
@@ -349,10 +303,7 @@ try{
                     else if($dpi > 160 &&  $dpi <= 240){
                         
                         // [HDPI]
-                        /*
-                        file_put_contents($hdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($hdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                  */
+                    
                         $image_file_path = $hdpi_path . $game->image_name_full;
                        
                         $result_image_full = $client->putObject( array(
@@ -377,10 +328,7 @@ try{
                     else if($dpi > 240 && $dpi <= 320){
                         
                         // [XHDPI]
-                      /* 
-                        file_put_contents($xhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($xhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                        */
+          
                         $image_file_path = $xhdpi_path . $game->image_name_full;
                       
                         $result_image_full = $client->putObject( array(
@@ -406,10 +354,7 @@ try{
                         
                         
                         // [XXHDPI]
-                        /*
-                        file_put_contents($xxhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($xxhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                        */
+                       
                         $image_file_path = $xxhdpi_path . $game->image_name_full;
                         $result_image_full = $client->putObject( array(
                             
@@ -501,7 +446,7 @@ try{
             $game->image_name_thumbnail = basename($game->software_image_thumbnail_url);
             $game->image_name_full = basename($game->software_image_full_url);
             
-        //    echo "Game Name Full: " . $game->image_name_full . " " . " Game Name Thumbnail: " . $game->image_name_thumbnail;
+
 
             $operation_software_status = $inventory->delete_software($pdo, $user_id, $game);
         
@@ -512,10 +457,7 @@ try{
             }
     
             // [LDPI]
-            /*
-            $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/ldpi/" . $game->image_name_thumbnail;
-            $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/ldpi/" . $game->image_name_full;
-*/
+  
             $game->software_image_thumbnail_url = "img/ldpi/" . $game->image_name_thumbnail;
             $game->software_image_full_url = "img/ldpi/" . $game->image_name_full;
             
@@ -530,11 +472,7 @@ try{
             ));
                 
               // [MDPI]
-                /*
-                 $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/mdpi/" . $game->image_name_thumbnail;
-                 $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/mdpi/" . $game->image_name_full;
-                
-                 */
+        
                 
               $game->software_image_thumbnail_url = "img/mdpi/" . $game->image_name_thumbnail;
               $game->software_image_full_url = "img/mdpi/" . $game->image_name_full;
@@ -556,10 +494,7 @@ try{
                 ));
                 
             // [HDPI]
-             /*
-                     $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/hdpi/" . $game->image_name_thumbnail;
-                     $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/hdpi/" . $game->image_name_full;
-                */
+    
                     
               $game->software_image_thumbnail_url = "img/hdpi/" . $game->image_name_thumbnail;
               $game->software_image_full_url = "img/hdpi/" . $game->image_name_full;
@@ -607,10 +542,7 @@ try{
                ));
                
             // [XXHDPI]
-              /*
-                  $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/xxhdpi/" . $game->image_name_thumbnail;
-                  $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/xxhdpi/" . $game->image_name_full;
-              */
+           
               $game->software_image_thumbnail_url = "img/xxhdpi/" . $game->image_name_thumbnail;
               $game->software_image_full_url = "img/xxhdpi/" . $game->image_name_full;
                                 /*
@@ -717,14 +649,7 @@ try{
                 
                 $image_file_path = null;
                 
-                /*
-                $xxxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxxhdpi/";
-                $xxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxhdpi/";
-                $xhdpi_path = "C:/Web/Project/TheExchange Project/img/xhdpi/";
-                $hdpi_path = "C:/Web/Project/TheExchange Project/img/hdpi/";
-                $mdpi_path = "C:/Web/Project/TheExchange Project/img/mdpi/";
-                $ldpi_path = "C:/Web/Project/TheExchange Project/img/ldpi/";
-                */
+            
         
                 $xxxhdpi_path = "img/xxxhdpi/";
                 $xxhdpi_path = "img/xxhdpi/";
@@ -737,10 +662,7 @@ try{
                 if($dpi <= 120){
                     
                     // [LDPI]
-                    /*
-                    file_put_contents($ldpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($ldpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
+                    
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -764,10 +686,7 @@ try{
                 }else if($dpi > 120 && $dpi <= 160){
                     
                     // [MDPI]
-                    /*
-                    file_put_contents($mdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($mdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
+                
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -820,10 +739,7 @@ try{
                 else if($dpi > 240 && $dpi <= 320){
                     
                     // [XHDPI]
-                    /*
-                    file_put_contents($xhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($xhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
+                   
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -848,10 +764,7 @@ try{
                     
                     
                     // [XXHDPI]
-                    /*
-                    file_put_contents($xxhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($xxhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
+            
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -875,10 +788,7 @@ try{
                 else if($dpi > 480 && $dpi <= 640){
                     
                     // [XXXHDPI]
-                    /*
-                    file_put_contents($xxxhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($xxxhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
+                  
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -919,7 +829,7 @@ try{
     
 }catch (PDOException $pdo_error){
     
-   // echo $pdo_error->getMessage();
+
     echo json_encode(array("inventory_management_error" => "error 100: inventory could not be accessed"));
     $pdo = null;
     return;
