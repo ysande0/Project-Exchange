@@ -46,7 +46,6 @@ class Token
             "exp" => $token_end_valid_time
         );
         
-        // print_r("The key: " . $this->key);
         $new_token = JWT::encode($payload, $this->key);
         return $new_token;
     
@@ -66,12 +65,9 @@ class Token
             ));
         } catch (Firebase\JWT\ExpiredException $exp_error) {
             
-           // $exp_error->getMessage();
-            // print_r("Token is expired" . "\n");
             return true;
         }
         
-        // print_r("Token not expired" . "\n");
         return false;
     }
 
