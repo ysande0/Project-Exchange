@@ -1,9 +1,6 @@
 <?php
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
-//$private_crypt_key_path = $path . "keys/cryp_key.txt";
 
-// Determine if message is from registered user.
 $message_input = file_get_contents("php://input");
 $message_input = json_decode($message_input, true);
 
@@ -23,17 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ops = $message_input['ops'];
 }
 
-
-
 if($ops === 1){
     
-    // Insert Blocked User
     $message_entry->from_id = $message_input['from_id'];
     $message_entry->to_id = $message_input['to_id'];
 }
 else if($ops === 2){
     
-    // Delete Blocked User 
     $message_entry->from_id = $message_input['from_id'];
     $message_entry->to_id = $message_input['to_id'];
     
