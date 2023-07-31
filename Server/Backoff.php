@@ -8,10 +8,6 @@ use Kreait\Firebase;
 
 class Backoff{
     
-    // 1): Receive data or payload
-    // 2): Delay after fixed time;
-    // 3): Transmit data to destination.
-    // 4): If failure repeat step 2, plus a random interval ()
     private $MAX_MS;
     private $MAX_MS_RANDOM;
     private $MIN_MS_RANDOM;
@@ -173,7 +169,6 @@ class Backoff{
                          
                          
                      }catch(\Kreait\Firebase\Exception\Messaging\InvalidMessage $error){
-                         // If error occurrs when user is not in foreground. There is no way to relay message.
                          
                          $error_array = $error->errors();
                          $error_description = $error_array['error'];
@@ -242,8 +237,6 @@ class Backoff{
     }
     
     public function is_sender_alerted($is_sender){
-        
-        // Prevents second retry transmission attempt to the sender, if the sender is to be alerted of message transmissions issues.
         
         $this->is_sender = $is_sender;
     }
