@@ -79,8 +79,6 @@ class Backoff{
         try{
             
             $this->firebase_messaging->validate($this->message);
-     
-            echo "FCM: Message validated" . "\n";
             
         }catch(\Kreait\Firebase\Exception\Messaging\InvalidMessage $error){
             
@@ -88,8 +86,6 @@ class Backoff{
             $error_description = $error_array['error'];
             $error_code = $error_description['code'];
             
-            
-            echo "2) FCM: Message validation error " . "\n";
                $this->is_message_sent = false;
             switch($error_code){
                 
@@ -107,8 +103,7 @@ class Backoff{
                     
             }
         }
-        
-        echo "2) FCM sent!" . "\n";
+    
         $this->firebase_messaging->send($this->message);
        
         $this->is_message_sent = true;
@@ -122,7 +117,6 @@ class Backoff{
             
             $this->time_to_wait_ms += $this->calculate_wait_time($this->number_tries);
             
-            echo $counter . ") ".  $this->time_to_wait_ms . " ms" . "\n";
             $counter++;
             sleep( $this->convert_ms_to_seconds($this->time_to_wait_ms) );
             
@@ -136,7 +130,6 @@ class Backoff{
         
        
         if($this->is_sender){
-            echo " [Prevent resend to sender] " . "\n";
             return;
         }
         
@@ -144,21 +137,14 @@ class Backoff{
             
            
             if(array_key_exists($this->from_user_id, $this->clients)){
-                
-                echo $this->from_user_id. " is currently available  (2)" . "\n";
+            
    
                 $client = $this->clients[$this->from_user_id];
-                
-                if($client === null)
-                    echo "Client is null" . "\n";
-                else 
-                    echo "Client is not null" . "\n";     
-                    
+            
                 $client->send($this->error_message);
                  return;             
             }else{
                 
-                     echo "Entered FCM Zone" . "\n";
                      $error_message_fcm = CloudMessage::withTarget('token', $this->sender_token)
                      ->withData(["message_error" => true , 'conversation_id' => $this->conversation_id,
                          'message_id' => $this->message_id]);
@@ -178,21 +164,18 @@ class Backoff{
                          switch($error_code){
                              
                              case 429:
-                                 echo "Message is not sent. 429 Retry" . "\n";
                                  $this->reset();
                                  $this->is_sender = true;
                                  $this->retry_transmission();
                                  break;
                                  
                              case 503:
-                                 echo "Message is not sent. 503 Retry" . "\n";
                                  $this->reset();
                                  $this->is_sender = true;
                                  $this->retry_transmission();
                                  break;
                                  
                              case 500:
-                                 echo "Message is not sent. 500 Retry" . "\n";
                                  $this->reset();
                                  $this->is_sender = true;
                                  $this->retry_transmission();
@@ -203,7 +186,6 @@ class Backoff{
                          return;
                      }
                      
-                     echo "Message was not sent. Sending error message to sender" . "\n";
                      $this->firebase_messaging->send($error_message_fcm);
                      return;
                   
