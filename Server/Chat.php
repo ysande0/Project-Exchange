@@ -124,23 +124,6 @@ class Chat implements MessageComponentInterface {
         
         echo " [onMessage] Exit \n";
         
-        /*
-         foreach ($this->clients as $client){
-         
-         if($client != $from){
-         
-         $client->send($msg);
-         
-         
-         }
-         
-         }
-         
-         // Lookup UID
-         
-         $client = $this->clients[$this->USER_ID];
-         $client->send($msg);
-         */
     }
     
     public function onClose(ConnectionInterface $conn) {
@@ -157,21 +140,6 @@ class Chat implements MessageComponentInterface {
     
     private function send_message($pdo){
         
-        echo " Executing... \n";
-        
-        /*
-         $sql = "SELECT blocked_user_id FROM blocked_users WHERE user_id = ?";
-         $pdo_statement = $pdo->prepare($sql);
-         $pdo_statement->execute([$this->message_entry->to_id]);
-         $blocked_user_id = $pdo_statement->fetch(\PDO::FETCH_ASSOC);
-         
-         if($this->message_entry->from_id === $blocked_user_id['blocked_users_id']){
-         echo $this->message_entry->from_id . " has been blocked by " . $this->message_entry->to_id;
-         return;
-         }
-         else
-         echo " User not blocked \n";
-         */
          $message_response = json_encode(array("messaging" => true , 'conversation_id' => $this->message_entry->conversation_id ,'first_name' => $this->message_entry->first_name, 'from_id' => $this->message_entry->from_id,
              'message' => $this->message_entry->message, 'profile_image_url' => $this->message_entry->profile_image_url));
          
