@@ -2,18 +2,6 @@
 
   
 use function GuzzleHttp\Promise\queue;
-
-// Autheticate the user before proceeding 
-
-/*
- * Retrieve data 
- * Decode the data
- * Create game Object, then insert the data 
- * Insert data into two sets [Arrays]
- * Perform Cartesian product
- * Query the database: User wants in the inventory. User Haves in the Table Wants
- * Return results
- * */
   
 $request_information = file_get_contents("php://input");
 $request_information = json_decode($request_information, true);
@@ -22,8 +10,6 @@ require_once 'Game.php';
 
 $have_set = array();
 $want_set = array();
-
-
 
 $have_set_arr = $request_information['Have'];
 $want_set_arr = $request_information['Want'];
@@ -42,8 +28,6 @@ $bounding_box->latitude2 =   $user_latitude + ($bounding_box->radius / 69);
 
 $bounding_box->longitude1 =  $user_longitude - $bounding_box->radius / abs(cos(deg2rad($user_latitude)) * 69);
 $bounding_box->longitude2 =  $user_longitude + $bounding_box->radius / abs(cos(deg2rad($user_latitude)) * 69);
-
-print_r("Coord: " . $bounding_box->latitude1 . " " . $bounding_box->longitude1 . " " . $bounding_box->latitude2 . " " . $bounding_box->longitude2 . "\n");
 
 for($i = 0; $i < sizeof($have_set_arr); $i++){
     
@@ -75,7 +59,7 @@ require_once 'Product.php';
 
 
 $cartesian_product = array();
-// Cartesian product
+
 for($i = 0; $i < sizeof($have_set); $i++){
     
     for($j = 0; $j < sizeof($want_set); $j++){
@@ -89,10 +73,8 @@ for($i = 0; $i < sizeof($have_set); $i++){
     
 }
 
-// Query Database
 $query_arr = array();
 
-//require_once 'Message.php';
 require_once 'FirebaseDB.php';
 require_once 'User.php';
 require_once 'DatabaseLoginInfo.php';
@@ -164,16 +146,12 @@ if(!$query)
 }
 
 if(sizeof($exchange_response) === 0){
-    echo "\n" . "No results found";
     return;
 }
 
 
 $exchange_response = json_encode($exchange_response);
 echo $exchange_response;
-// Send requested user notifcation.
-
-// Send other users notifcations as well. 
 
 
 ?>
