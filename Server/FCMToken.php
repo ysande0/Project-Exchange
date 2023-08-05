@@ -14,8 +14,7 @@ try{
     
     $pdo = new PDO("mysql:host=$database_host;dbname=$database_name", $database_username, $database_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    
+       
     $sql = "UPDATE users SET fcm_token = ? WHERE unique_id = ?";
     $pdo_statement = $pdo->prepare($sql);
     $pdo_statement->execute([$fcm_token, $from_uid]);
@@ -28,7 +27,5 @@ try{
     echo $pdo_error->getMessage();
    
 }
-
-
 
 ?>
