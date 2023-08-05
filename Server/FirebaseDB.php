@@ -2,14 +2,6 @@
 
 use Kreait\Firebase\Exception\InvalidArgumentException;
 
-/*
- * Database name:
- * 
- * Conversations and Transactions
- * 
- * */
-
-
 class FirebaseDB{
     
     
@@ -28,18 +20,7 @@ class FirebaseDB{
             echo "Error! no data available";
             return false;
         }
-        /*
-        $entry = [
-            
-            "First Name" => $data->first_name,
-            "Last Name" => $data->last_name,
-            "Email"=> $data->email,
-            "Password" => $data->password,
-            "FCM Token" => $data->fcm_token
-            
-        ];     
-        */
-        
+
         $entry = [
             
             "name" => $data->first_name,
@@ -55,27 +36,13 @@ class FirebaseDB{
     }
     
     public function insert_message($conversation_id, $message_entry){
-        
-        /*
-         if($conversation_id === 0){
-         // Generate new conversation
-         
-         $entry = [1 => ["first_name" => $message_entry->first_name, "uid" => $message_entry->from_uid, "message" => $message_entry->message, "time" => $message_entry->time, "date" => $message_entry->date]];
-         // Generate unique ad. Do not use firebase
-         $conversation_ref = $this->firebase_database->getReference($this->database_name)->push($entry);
-         $conversation_id = $conversation_ref->getKey();
-         
-         return $conversation_id;
-         }
-         */
-        // Insert new message entry under the same conversation id
     
         $number_message_entry = $this->firebase_database->getReference($this->database_name . '/' . $conversation_id)->getSnapshot()->numChildren();
         
         if((int)$number_message_entry < 1){
             
             $entry = [1 => ["first_name" => $message_entry->first_name, "uid" => $message_entry->from_uid, "message" => $message_entry->message, "time" => $message_entry->time, "date" => $message_entry->date]];
-            // Generate unique ad. Do not use firebase
+
             $this->firebase_database->getReference($this->database_name . '/' . $conversation_id)->update($entry);
            
         }
@@ -84,8 +51,7 @@ class FirebaseDB{
             $entry = [$number_message_entry => ["first_name" => $message_entry->first_name, "uid" => $message_entry->from_uid, "message" => $message_entry->message, "time" => $message_entry->time, "date" => $message_entry->date]];
             
             try{
-                // '1' - john '2' - gina
-                //   print_r("Database name: " . $this->database_name . "  Conversation ID: " . $conversation_id);
+
                
                 $this->firebase_database->getReference($this->database_name . '/' . $conversation_id)->update($entry);
             }catch(InvalidArgumentException $firebase_error){
@@ -104,18 +70,8 @@ class FirebaseDB{
     
     public function insert_transaction($user_id, $entry){
         
-        /*
-        if($transaction_id === 0){
-            // Generate new conversation
-            
-            // Generate unique ad. Do not use firebase
-            $conversation_ref = $this->firebase_database->getReference($this->database_name)->push($entry);
-            $transaction_id = $conversation_ref->getKey();
-            return $transaction_id;
-        }
-        */
         try{
-            // '1' - john '2' - gina
+
             $this->firebase_database->getReference($this->database_name . '/' . $user_id)->update($entry);
         }catch(InvalidArgumentException $firebase_error){
             
@@ -140,8 +96,6 @@ class FirebaseDB{
     public function update_transaction($path, $entry){
         
         if(empty($path) || $path === null){
-            
-            echo "Path does not exist";
             return;
         }
         
@@ -160,8 +114,6 @@ class FirebaseDB{
     public function getNumChild($path){
         
         if(empty($path) || $path === null){
-            
-            echo "Path does not exist";
             return;
         }
         
@@ -200,10 +152,8 @@ class FirebaseDB{
     public function Query($key, $data){
         
         if(!isset($data)){
-            echo "Error! data is empty";
             return;
         }
-
         
         return $this->firebase_database->getReference()->getChild($this->database_name . '/' . $data->uid . '/' . $key)->getValue();
     }
