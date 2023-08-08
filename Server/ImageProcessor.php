@@ -8,28 +8,13 @@ use Aws\S3\S3Client;
 $client = null;
 
 try{
-    echo " " . "\n";
-    echo " " . "\n";
-    echo "------------------------------------------------------------------------------------------------------------------------------------- \n";
-    echo "images processing [START] "  . date('m/d/Y h:i:s a', time()) . "\n";
-    
-    echo "\n";
-   // $memory_limit = ini_get('memory_limit');
-    echo "\n";
-    echo_memory_usage();
-    echo " " . "\n";
-    echo " " . "\n";
-    echo "Connecting database..." . date('m/d/Y h:i:s a', time()) . "\n";
+
     $pdo = new PDO("mysql:host=$database_host;dbname=$database_name", $database_username, $database_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "...database connected " . date('m/d/Y h:i:s a', time()) . "\n";
-    echo_memory_usage();
-    echo " " . "\n";
+
     $image_resizer = new ImageResizer();
     $query = $image_resizer->select_image($pdo);
-    echo_memory_usage();
-    echo " " . "\n";
-    echo "connecting to digitalocean spaces... " . date('m/d/Y h:i:s a', time()) . "\n";
+
     $client = new S3Client([
         'version' => 'latest',
         'region'  => 'us-east-1',
@@ -39,46 +24,28 @@ try{
             'secret' => 'dfOq3ks6RKmfXZEWmbl56vUECzw7IJoF38A+GcL0pvg',
         ],
     ]);
-    echo "...connected to digitalocean spaces " . date('m/d/Y h:i:s a', time()) . "\n";
-    echo_memory_usage();
-    echo " " . "\n";
     $bucket = 'exchangeproject';
     for($i = 0; $i < count($query); $i++){
-        
-        echo " " . "\n";
-        echo $i . "): " . " (Beginning loop) " . "\n";
-        echo_memory_usage();
-        echo " " . "\n";
+    
    
         $input = $query[$i];
         $url = $input['image_file_path'];
-      //  $image_encoded = base64_encode(file_get_contents($url));
         $image_encoded = $client->getObject(array(
             
             'Bucket' => $bucket,
             'Key' => $url
                  
         ));
-        echo " " . "\n";
-        echo " " . "\n";
-        echo "generating images..."  . date('m/d/Y h:i:s a', time()) . "\n";
     
         generate_image($client, base64_encode($image_encoded['Body']), $input['image_name_full'], $input['image_name_thumbnail'], $input['dpi']);
-        echo "...images generated "  . date('m/d/Y h:i:s a', time()) . "\n";
+
         $is_processed = 1;
-        echo "id: " .  $input['id'] . "  is_processed: " . $is_processed . "  " . date('m/d/Y h:i:s a', time()) . "\n";
+
         $image_resizer->update_is_processed($pdo, $input['id'], $is_processed);
-        echo " " . "\n";
-        echo " " . "\n";  
-        echo_memory_usage();
-        echo $i . "): " . " (Ending loop) " . "\n";
         
             
     }
-    echo " " . "\n";
-    echo_memory_usage();
-    echo "images processed [END] "  . date('m/d/Y h:i:s a', time()) . "\n";
-    echo "------------------------------------------------------------------------------------------------------------------------------------- \n";
+
 }catch(PDOException $pdo_error){
     
     echo json_encode(array("database_connection_error" => "error: Database Connection"));
@@ -88,15 +55,7 @@ try{
 
 
 function generate_image($client, $image_encoded_full, $image_name_full, $image_name_thumbnail, $dpi){
-       /*
-    $xxxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxxhdpi/";   
-    $xxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxhdpi/";    
-    $xhdpi_path = "C:/Web/Project/TheExchange Project/img/xhdpi/";
-    $hdpi_path = "C:/Web/Project/TheExchange Project/img/hdpi/";
-    $mdpi_path = "C:/Web/Project/TheExchange Project/img/mdpi/";
-    $ldpi_path = "C:/Web/Project/TheExchange Project/img/ldpi/";
-        */
-    echo "[GENERATING] \n";
+
     $xxxhdpi_path = "img/xxxhdpi/";
     $xxhdpi_path = "img/xxhdpi/";
     $xhdpi_path = "img/xhdpi/";
@@ -107,10 +66,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
     
     $quality_full = 96;
     $quality_thumbnail = 75;
-    
-    
-    
-    "starting___ " . date('m/d/Y h:i:s a', time()) . "\n";
+
     if($dpi <= 120){
         
         // [LDPI]
@@ -244,7 +200,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
         $image_width =  $imagick->getimagewidth() * (4 / 3);
         $image_height =  $imagick->getimageheight() * (4 / 3);
         $imagick->resizeImage($image_width , $image_height, Imagick::FILTER_LANCZOS, 1);
-       // $imagick->writeimage($mdpi_path . $image_name_full);
+
         $result_image_full = $client->putObject( array(
             
             'Bucket' => 'exchangeproject',
@@ -731,33 +687,18 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
         
         // [XXHDPI]
         echo_memory_usage();
-        echo "[XXHDPI]  \n";
+    
         $imagick =  new Imagick();
         $imagick->readImageBlob(base64_decode($image_encoded_full));
         $imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
-       // $imagick->setImageCompressionQuality((int) $quality_full);
+    
         
         // xxxhdpi
-        echo_memory_usage();
-        echo "#1 executing... \n ";
-        echo_memory_usage();
         $local_file_path = "/var/www/exchange_project/img/xxxhdpi/";
-        echo "#1.1 executing... \n ";
-        echo_memory_usage();
         $image_width  =  $imagick->getimagewidth() * (16 / 12);
-        echo_memory_usage();
-        echo "#1.2 executing... \n ";
-        echo_memory_usage();
         $image_height =  $imagick->getimageheight() * (16 / 12);
-        echo_memory_usage();
-        echo "#1.3 executing... \n ";
-        echo_memory_usage();
+
         $imagick->resizeImage($image_width, $image_height, Imagick::FILTER_LANCZOS, 1);
-        echo_memory_usage();
-        echo "#1a executing... \n ";
-        echo_memory_usage();
-       // $file_name = base64_to_jpeg($local_file_path . $image_name_full, $imagick->get);
-       // $image_contents = read_image_file($file_name);
         $result_image_full = $client->putObject( array(
             
             'Bucket' => 'exchangeproject',
@@ -766,14 +707,11 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo_memory_usage();
-        echo "#2 executing... \n ";
-        
+  
         $image_width = 400;
         $image_height = 400;
         $imagick->setImageCompressionQuality((int) $quality_thumbnail);
         $imagick->thumbnailImage($image_width, $image_height , false, false);
-        echo "#2a executing... \n ";
         $result_image_thumbnail = $client->putObject( array(
             
             'Bucket' => 'exchangeproject',
@@ -782,9 +720,9 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo "#2b executing... \n ";
+
         $imagick->clear();
-        echo "#3: executing... \n";
+
         // xhdpi
         $imagick->readImageBlob(base64_decode($image_encoded_full));
         $image_width =  $imagick->getimagewidth() * (8 / 12);
@@ -799,13 +737,12 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo "#3b: executing... \n";
-        echo "#4: executing... \n";
+
         $image_width = 200;
         $image_height = 200;
         $imagick->setImageCompressionQuality((int) $quality_thumbnail);
         $imagick->thumbnailImage($image_width, $image_height , false, false);
-        echo "#4a: executing... \n";
+
         $result_image_thumbnail = $client->putObject( array(
             
             'Bucket' => 'exchangeproject',
@@ -814,9 +751,9 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo "#4b: executing... \n";
+     
         $imagick->clear();
-        echo "#5: executing... \n ";
+   
         // hdpi
         $imagick->readImageBlob(base64_decode($image_encoded_full));
         $image_width =  $imagick->getimagewidth() * (6 / 12);
@@ -832,7 +769,6 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ContentType' => 'image/jpeg'
         ));
         
-        echo "#6: executing... \n";
         $image_width = 150;
         $image_height = 150;
         $imagick->setImageCompressionQuality((int) $quality_thumbnail);
@@ -863,7 +799,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo "#7: executing... \n";
+ 
         $image_width = 100;
         $image_height = 100;
         $imagick->setImageCompressionQuality((int) $quality_thumbnail);
@@ -879,7 +815,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
         ));
         
         $imagick->clear();
-        echo "#8: executing... \n ";
+   
         // ldpi
         $imagick->readImageBlob(base64_decode($image_encoded_full));
         $image_width =  $imagick->getimagewidth() * (3 / 12);
@@ -894,7 +830,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
             'ACL' => 'public-read',
             'ContentType' => 'image/jpeg'
         ));
-        echo "#9: executing... \n";
+ 
         $image_width = 75;
         $image_height = 75;
         $imagick->setImageCompressionQuality((int) $quality_thumbnail);
@@ -910,7 +846,7 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
         ));
         
         $imagick->clear();
-        echo "#10: executing... \n";
+
     }
     else if($dpi > 480 && $dpi <= 640){
         
@@ -1063,8 +999,6 @@ function generate_image($client, $image_encoded_full, $image_name_full, $image_n
         $imagick->clear();
         
     }
-    
-    echo "[GENERATED] \n";
 }
 
 function echo_memory_usage() {
@@ -1072,8 +1006,6 @@ function echo_memory_usage() {
     $mem_usage = memory_get_usage();
     $mem_peak = memory_get_peak_usage();
     
-    echo "Image Processor memory usage: " . round(($mem_usage / 1024) / 1024, 2) . " MB of memory " . date('m/d/Y h:i:s a', time()) . "\n";;
-    echo "Image Processor memory peak:  " . round(($mem_peak / 1024) / 1024, 2) . " MB of memory " . date('m/d/Y h:i:s a', time()) . "\n";;
 } 
 
 ?>
