@@ -378,10 +378,6 @@ try{
                     else if($dpi > 480 && $dpi <= 640){
                         
                         // [XXXHDPI]
-                        /*
-                        file_put_contents($xxxhdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                        file_put_contents($xxxhdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-               */
                         $image_file_path = $xxxhdpi_path . $game->image_name_full;
                         $result_image_full = $client->putObject( array(
                             
@@ -420,17 +416,7 @@ try{
                 $pdo = null;
                 return;
             }
-            
-         
-            
-          /*
-            $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/" . $game->image_name_thumbnail;
-            $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/" . $game->image_name_full;
-     
-            // If the function below does not work. Try using a relative path starting from TheExchange Project 
-            file_put_contents($game->software_image_thumbnail_url, base64_decode($game->game_image_encoded_thumbnail));
-            file_put_contents($game->software_image_full_url, base64_decode($game->game_image_encoded_full));
-            */
+        
             echo json_encode(array("transaction_software_101_1" => true, 
                 "software_image_name_thumbnail" => $game->image_name_thumbnail,
                 "software_image_name_full" => $game->image_name_full));
@@ -446,8 +432,6 @@ try{
             $game->image_name_thumbnail = basename($game->software_image_thumbnail_url);
             $game->image_name_full = basename($game->software_image_full_url);
             
-
-
             $operation_software_status = $inventory->delete_software($pdo, $user_id, $game);
         
             if($operation_software_status === false){
@@ -457,7 +441,6 @@ try{
             }
     
             // [LDPI]
-  
             $game->software_image_thumbnail_url = "img/ldpi/" . $game->image_name_thumbnail;
             $game->software_image_full_url = "img/ldpi/" . $game->image_name_full;
             
@@ -472,17 +455,10 @@ try{
             ));
                 
               // [MDPI]
-        
-                
+              
               $game->software_image_thumbnail_url = "img/mdpi/" . $game->image_name_thumbnail;
               $game->software_image_full_url = "img/mdpi/" . $game->image_name_full;
-                /*
-                if(is_file($game->software_image_thumbnail_url))
-                    unlink($game->software_image_thumbnail_url);
-                    
-                if(is_file($game->software_image_full_url))
-                    unlink($game->software_image_full_url);
-                   */
+            
                 $result = $client->deleteObject(array(
                     'Bucket' => $bucket,
                     'Key'    => $game->software_image_thumbnail_url,
@@ -508,28 +484,11 @@ try{
                   'Bucket' => $bucket,
                   'Key'    => $game->software_image_full_url,
               ));
-              
-              /*
-              if(is_file($game->software_image_thumbnail_url))
-                        unlink($game->software_image_thumbnail_url);
-                        
-              if(is_file($game->software_image_full_url))
-                        unlink($game->software_image_full_url);
-                     */       
+                  
             // [XHDPI]
-            /*
-                         $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/xhdpi/" . $game->image_name_thumbnail;
-                         $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/xhdpi/" . $game->image_name_full;
-            */
                $game->software_image_thumbnail_url = "img/xhdpi/" . $game->image_name_thumbnail;
                $game->software_image_full_url = "img/xhdpi/" . $game->image_name_full;
-                        /*
-               if(is_file($game->software_image_thumbnail_url))
-                 unlink($game->software_image_thumbnail_url);
-                            
-               if(is_file($game->software_image_full_url))
-                 unlink($game->software_image_full_url);
-                 */
+       
                
                $result = $client->deleteObject(array(
                    'Bucket' => $bucket,
@@ -545,13 +504,7 @@ try{
            
               $game->software_image_thumbnail_url = "img/xxhdpi/" . $game->image_name_thumbnail;
               $game->software_image_full_url = "img/xxhdpi/" . $game->image_name_full;
-                                /*
-              if(is_file($game->software_image_thumbnail_url))
-                 unlink($game->software_image_thumbnail_url);
-                                    
-              if(is_file($game->software_image_full_url))
-                 unlink($game->software_image_full_url);
-                 */
+     
               $result = $client->deleteObject(array(
                   'Bucket' => $bucket,
                   'Key'    => $game->software_image_thumbnail_url,
@@ -562,20 +515,10 @@ try{
                   'Key'    => $game->software_image_full_url,
               ));
             // [XXXHDPI]
-             /*
-                  $game->software_image_thumbnail_url = "C:/Web/Project/TheExchange Project/img/xxxhdpi/" . $game->image_name_thumbnail;
-                  $game->software_image_full_url = "C:/Web/Project/TheExchange Project/img/xxxhdpi/" . $game->image_name_full;
-             */
+          
              $game->software_image_thumbnail_url = "img/xxxhdpi/" . $game->image_name_thumbnail;
              $game->software_image_full_url = "img/xxxhdpi/" . $game->image_name_full;
-                                /*        
-             if(is_file($game->software_image_thumbnail_url))
-               unlink($game->software_image_thumbnail_url);
-                                            
-              if(is_file($game->software_image_full_url))
-                unlink($game->software_image_full_url);
-                    */
-              
+     
               $result = $client->deleteObject(array(
                   'Bucket' => $bucket,
                   'Key'    => $game->software_image_thumbnail_url,
@@ -641,16 +584,13 @@ try{
         else if($inventory_operation === 4){
             // Update
             
-          
             $operation_status = $inventory->update_software($pdo,  $game);
             
             
             if(isset($game->game_image_encoded_full)){
                 
                 $image_file_path = null;
-                
             
-        
                 $xxxhdpi_path = "img/xxxhdpi/";
                 $xxhdpi_path = "img/xxhdpi/";
                 $xhdpi_path = "img/xhdpi/";
@@ -709,12 +649,7 @@ try{
                 }
                 else if($dpi > 160 &&  $dpi <= 240){
                     
-                    // [HDPI]
-                    /*
-                    file_put_contents($hdpi_path . $game->image_name_full, base64_decode($game->game_image_encoded_full));
-                    file_put_contents($hdpi_path . $game->image_name_thumbnail, base64_decode($game->game_image_encoded_thumbnail));
-                    */
-                    
+                    // [HDPI]    
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -739,7 +674,6 @@ try{
                 else if($dpi > 240 && $dpi <= 320){
                     
                     // [XHDPI]
-                   
                     $result_image_full = $client->putObject( array(
                         
                         'Bucket' => 'exchangeproject',
@@ -812,20 +746,16 @@ try{
                 
       
                 $image_resizer->insert_image($pdo, $image_file_path, $game->image_name_full, $game->image_name_thumbnail, $dpi);
-                
-                    
+                        
             }
-            
-            
+                  
             echo json_encode(array("transaction_software_101_4" => true));
             $pdo = null;
             return;
             
         }
         
-    }
-    
-    
+    }   
     
 }catch (PDOException $pdo_error){
     
