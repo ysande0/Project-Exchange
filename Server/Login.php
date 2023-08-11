@@ -1,12 +1,7 @@
 <?php
 date_default_timezone_set("America/New_York");
-/*
- * Google recommends using Firebase Client SDK for log in and out 
- * 
- * */
 
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
 
 require $path . 'vendor/autoload.php';
 require 'User.php';
@@ -16,15 +11,6 @@ require 'Token.php';
 
 $login_information = file_get_contents("php://input");
 $login_information = json_decode($login_information, true);
-
-/*
- * login_error_100 - data fields are empty
- * login_error_101 - Email spacing issues
- * login_error_102 - Could not sign in account or verify email
- * login_error_103 - Server could not deliver data because it did not meet a requirement 
- * login_error_104 - Password is wrong
- * 
- * */
 
 
 if(!isset($login_information['email']) || !isset($login_information['password'])){
@@ -111,8 +97,7 @@ try{
     $user->first_name = $query_results['first_name'];
     $user->last_name = $query_results['last_name'];
     $user->is_active =  (int) $query_results['active'];
-    ///$user->is_active =  1;
-   // $user->is_active =  0;
+    
     $user->profile_image_name_thumbnail = $query_results['profile_image_name_thumbnail'];
     $user->profile_image_name_full = $query_results['profile_image_name_full'];
  
@@ -159,11 +144,7 @@ try{
                 "user_description" => $game->user_description, "software_uid" => $game->software_uid);
                 array_push($user_software, $item_arr);
             }
-        
-        
-        // Encrypt Access token 
-       // $user->access_token = Crypto::encrypt($user->access_token, Key::loadFromAsciiSafeString($crypt_key));
-        //print_r("Experienced Access Token: " . $user->access_token);
+    
         
         // NOTE: Hash password
         $json_response = null;
@@ -184,23 +165,6 @@ try{
         $sql = "UPDATE users SET active = 1, is_online = 1, last_modified = now(), last_login = now() WHERE user_id = ?";
         $pdo_statement = $pdo->prepare($sql);
         $pdo_statement->execute([$user->id]);
-
-        /*
-        $software_image_path = "C:/Web/Project/TheExchange Project/Images/" . $user->uid . "/software_images";
-        $profile_image_path = "C:/Web/Project/TheExchange Project/Images/" . $user->uid . "/profile_image";
-
-        
-        if(!file_exists($software_image_path)){
-            mkdir($software_image_path, 0777, true);
-        }
-        
-        if(!file_exists($profile_image_path)){
-            mkdir($profile_image_path, 0777, true);
-        }
-       */
-        
-      //  $user->access_token = Crypto::encrypt($user->access_token, Key::loadFromAsciiSafeString($crypt_key));
-     //   print_r("Beginner Access Token: " . $user->access_token . "\n");
 
         // NOTE: Hash password
         // NOTE: Encrypt Auth Token
