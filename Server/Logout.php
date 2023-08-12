@@ -28,20 +28,6 @@ try{
     
     
     // reset users token time back to zero for each column
-    /*
-    $sql = "UPDATE tokens SET token = 0, token_issue_time = 0, token_start_valid_time = 0, token_end_valid_time = 0 WHERE user_id = ?";
-    $pdo_statement = $pdo->prepare($sql);
-    $is_executed = $pdo_statement->execute([$user->id]);
-
-    if(!$is_executed){
-        
-        $pdo = null;
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode(array("logout_error_101" => true));
-        return;
-        
-    }
-        */
     
     $sql = "UPDATE users SET is_online = 0, last_modified = now(), last_logout = now() WHERE email = ? AND user_id = ?";
     $pdo_statement = $pdo->prepare($sql);
