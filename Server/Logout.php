@@ -1,7 +1,6 @@
 <?php
 date_default_timezone_set("America/New_York");
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
 
 require_once 'DatabaseLoginInfo.php';
 require_once 'User.php';
