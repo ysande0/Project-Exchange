@@ -74,8 +74,6 @@ else if($messaging_operation === 101){
       
 }
 
-//$user_token = Crypto::decrypt($user_token, Key::loadFromAsciiSafeString($crypt_key));
-
 require 'DatabaseLoginInfo.php';
 
 $device_token = null;
@@ -83,19 +81,6 @@ try{
     
     $pdo = new PDO("mysql:host=$database_host;dbname=$database_name", $database_username, $database_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    /*
-    $token = new Token($pdo);
-    $token->set_user_id($user_id);
-    $token->set_token($user_token);
-    $session_timeout = $token->validate();
-    
-    if($session_timeout){
-        
-        echo json_encode(array("session_timeout" => true));
-        return;
-    }
-    */
     
   
     if($messaging_operation === 100){
@@ -184,7 +169,5 @@ else if($messaging_operation === 101){
     
     echo json_encode(array("MESSAGE_OPERATION_101" => true));
 }
-
-
 
 ?>
