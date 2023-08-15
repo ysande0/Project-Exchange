@@ -1,6 +1,5 @@
 <?php
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
 $private_crypt_key_path = $path . "keys/cryp_key.txt";
 
 require_once 'DatabaseLoginInfo.php';
@@ -16,8 +15,6 @@ use Kreait\Firebase\Messaging\CloudMessage;
 $input = file_get_contents("php://input");
 $input = json_decode($input, true);
 
-
-//$crypt_key = file_get_contents($private_crypt_key_path);
 $message_entry = new MessageEntry();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
