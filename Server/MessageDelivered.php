@@ -80,29 +80,20 @@ try{
         
         case 400:
             // Send Message to sender that message could not send
-            echo "400: Executing " . "\n";
-            
-            $this->message_transmission_failure($error_message, $message_entry->sender_fcm_token);
-            
+            $this->message_transmission_failure($error_message, $message_entry->sender_fcm_token);   
             break;
             
         case 404:
             // Send Message to sender that message could not send
-            echo "404: Executing " . "\n";
-            
             $this->message_transmission_failure($error_message, $message_entry->sender_fcm_token);
             break;
             
         case 403:
             // Send Message to sender that message could not send
-            echo "403: Executing "  . "\n";
-            
             $this->message_transmission_failure($error_message, $message_entry->sender_fcm_token);
             break;
             
         case 429:
-            echo "429: Executing " . "\n";
-            
             $backoff = new Backoff($firebase_messaging, $message, $message_entry->recipient_fcm_token, $error_message, null);
             $backoff->set_from_id(null);
             $backoff->set_from_token($message_entry->sender_fcm_token);
@@ -110,14 +101,12 @@ try{
             break;
             
         case 503:
-            echo "503: Executing "  . "\n";
             $backoff = new Backoff($firebase_messaging, $message, $message_entry->recipient_fcm_token);
             $backoff->set_from_id($message_entry->sender_fcm_token);
             $backoff->retry_transmission();
             break;
             
         case 500:
-            echo "500: Executing "  . "\n";
             $backoff = new Backoff($firebase_messaging, $message, $message_entry->recipient_fcm_token);
             $backoff->set_from_id($message_entry->sender_fcm_token);
             $backoff->retry_transmission();
