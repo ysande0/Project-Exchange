@@ -2,8 +2,8 @@
 
 class Product{
     
-    public $have; // Have
-    public $want; // Want
+    public $have;
+    public $want;
   
 }
 
