@@ -1,27 +1,7 @@
 <?php
 date_default_timezone_set("America/New_York");
-/* IMPORTANT NOTE 
- * 
- * 1) Email verification mechanism 
- * 
- * */
-
-
-/* Error List:
- * 
- * register_error_100 -> Data Entry
- * register_error_101 -> Name identification
- * register_error_102 -> Email
- * register_error_103 -> Password
- * 
- * */
-
-// IMPORTANT NOTE: Add mechanism that verifies email is real before inserting data to database.
-// Send user an email verifying they wanted to create an account. Disregard
-// Make sure each email is unique 
 
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
 require $path . 'vendor/autoload.php';
 require 'Token.php';
 
@@ -45,23 +25,6 @@ if(!isset($registeration_information['fcm_token'])){
     return;
 }
 
-/*
-if(preg_match_all("/[\d\W]/", $registeration_information['first_name'])
-    || preg_match_all("/[\d\W]/", $registeration_information['last_name'])){
-    
-        header('Content-type: application/json; charset=utf-8');
-       echo json_encode(array("register_error_101" => "First or last name has inappropriate symbols"));
-       return;
-}
-
-if(preg_match_all("/[\s]/", $registeration_information['email'])){
-    
-    header('Content-type: application/json; charset=utf-8');
-    echo json_encode(array("register_error_102" => "Email has inappropriate symbols"));
-    return;
-}
-*/
-
 require_once 'User.php';
 require_once 'DatabaseLoginInfo.php';
 
@@ -74,36 +37,11 @@ $user->password = password_hash($registeration_information['password'], PASSWORD
 $user->fcm_token = $registeration_information['fcm_token'];
 $user->uid = $registeration_information['uid'];
 
-
-/*
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
-use Kreait\Firebase\Auth;
-
-
-
-$service_account = ServiceAccount::fromJsonFile($path . 'secret/exchange-project-30ec1-4c320432756f.json');
-
-$firebase = (new Factory())->withServiceAccount($service_account)->create();
-$account = new Account($firebase, $user);
-$account->create_account();
-*/
-//print_r("--> UID: " . $user->uid . " Time:  " . date('h:m:s', time()) . " \n");
-
 if(empty($user->uid)){
     
     echo json_encode(array("register_error_102" => "register_error_102"));
     return;
 }
-
-/*
-if(!($user->password)){
-    
-    echo json_encode(array("register_error_103" => "Authentication issue occurred"));
-    return;
-}
-*/
-//$user->access_token = $account->get_access_token();
 
 $pdo = null;
 try{
@@ -124,11 +62,7 @@ VALUES(?, ?, ?, ?, ?, ?, ?)";
         echo json_encode(array("register_error_103" => "register_error_103"));
         return;
     }
-       
-    /*
-    $token = new Token($pdo);
-    $token->create_token_table_entry();
-    */
+    
 
     $sql = "INSERT INTO locations (position) VALUES (POINT(?, ?))";
     $pdo_statement = $pdo->prepare($sql);
@@ -140,21 +74,7 @@ VALUES(?, ?, ?, ?, ?, ?, ?)";
         echo json_encode(array("register_error_104" => "register_error_104"));
         return;
     }
-    
-    
- /*
-    $sql = "INSERT INTO user_ratings (aggregate_score, number_transactions, rating) VALUES (0, 0, 0)";
-    $pdo_statement = $pdo->prepare($sql);
-    $operation_status = $pdo_statement->execute();
-        
-    if(!$operation_status){
-        
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode(array("account_created" => false));
-        return;
-    }
 
-*/
 
 }catch (PDOException $pdo_error){
     
@@ -167,13 +87,6 @@ VALUES(?, ?, ?, ?, ?, ?, ?)";
 }
 
 $pdo = null;
-
-/*
-$email_sent = true;
-$email_sent = $account->sendEmailConfirmation();
-*/
-
-//exec("php AccountCreation.php {$user->uid} {$user->email} {$user->password} {$user->first_name} {$user->last_name} > /dev/null &");
 
 header('Content-type: application/json; charset=utf-8');
 echo json_encode(array("account_created" => true, "email" => $user->email, "password" => $user->password, "first_name" => $user->first_name,
