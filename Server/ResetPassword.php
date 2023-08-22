@@ -1,7 +1,6 @@
 <?php
 date_default_timezone_set("America/New_York");
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
 require $path . 'vendor/autoload.php';
 require_once 'User.php';
 require_once 'FirebaseDB.php';
@@ -10,12 +9,6 @@ require_once 'DatabaseLoginInfo.php';
 
 $input = file_get_contents("php://input");
 $input = json_decode($input, true);
-
-/*
- * Verify email is not empty 
- * Verify password are the same 
- * Verify password is of certain length
- * */
 
 if(empty($input['email'])){
     
@@ -42,23 +35,6 @@ if(strlen($input['password']) < 4 ){
 $user = new User();
 $user->email = $input['email'];
 $user->password = password_hash($input['password'], PASSWORD_DEFAULT);
-/*
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
-use Kreait\Firebase\Auth;
-
-$service_account = ServiceAccount::fromJsonFile($path . 'secret/exchange-project-30ec1-4c320432756f.json');
-
-$firebase = (new Factory())->withServiceAccount($service_account)->create();
-
-$user = new User();
-$user->uid = $firebase->getAuth()->getUserByEmail($email)->uid;
-$user->email = $input['email'];
-$user->password = password_hash($input['password'], PASSWORD_DEFAULT);
-
-$account = new Account($firebase, $user);
-$account->update_password();
-*/
 
 // Make sure the length is at 
 try{
