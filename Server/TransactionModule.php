@@ -35,23 +35,6 @@ $input = json_decode($input, true);
 
 $crypt_key = file_get_contents($private_crypt_key_path);
 
-/*
- * Transaction method:
- * Request - 100
- * Response - 101
- * Cancel - 102
- * Complete - 104
- * Retry - 103
- * Query - 105
- * Query Recipient Software - 106
- * 
- * 
- * Transaction response: 
- * Accept - 1
- * Decline - 0 (Reject the request)
- * Reject - 2 (Reject the map) 
- * 
- * */
 $headline_game = null;
 $transaction_request = null;
 $transaction_response = null;
@@ -87,19 +70,7 @@ if($input['messaging_operation'] === 100){
     $transaction_request->date = $input['date'];
     $transaction_request->transaction_id = $input['transaction_id'];
     $transaction_request->conversation_id = $input['conversation_id']; 
-    
-    /*
-    $transaction_request->software_want_array = $input['want'];
-    $transaction_request->software_have_array = $input['have'];
-*/
 
-    
-    /*
-    $headline_game->title = $input['headline_title'];
-    $headline_game->platform = $input['headline_platform'];
-    $headline_game->file_path = $input['headline_software_image_url'];
-    */
-    
     
 }
 else if($input['messaging_operation'] === 101){
@@ -166,26 +137,11 @@ else if($input['messaging_operation'] === 106){
 require 'DatabaseLoginInfo.php';
 require 'FirebaseMessage.php';
 
-//$user_token = Crypto::decrypt($user_token, Key::loadFromAsciiSafeString($crypt_key));
-
 try{
     
     $pdo = new PDO("mysql:host=$database_host;dbname=$database_name", $database_username, $database_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   
-    /*
-    $token = new Token($pdo);
-    $token->set_user_id($user_id);
-    $token->set_token($user_token);
-    $session_timeout = $token->validate();
-    
-    if($session_timeout){
-        
-        echo json_encode(array("session_timeout" => true));
-        return;
-    }
-    */
-   
+
         
     if($input['messaging_operation'] === 100){
           // Request
@@ -204,30 +160,7 @@ try{
         
  
         // Change $transaction_request->software_have_array to $input
-        /*
-        for($i = 0; $i < sizeof($input['have']); $i++){
         
-            $arr_have = array();
-            $arr_have = $input['have'][$i];
-            $game = new Game();
-            $game->title = $arr_have['title'];
-            $game->platform = $arr_have['platform'];
-            $game->file_path = $arr_have['software_image_url'];
-            
-            $sql = "SELECT software_inventory.software_image_url, users.first_name, users.profile_image_url FROM software_inventory INNER JOIN users ON users.user_id = software_inventory.user_id 
-          AND software_inventory.title = ? AND software_inventory.platform = ?"; 
-            $pdo_statement = $pdo->prepare($sql);
-            $pdo_statement->execute([$game->title, $game->platform]);
-            $url_result = $pdo_statement->fetch(PDO::FETCH_ASSOC);
-            
-            $game->file_path = $url_result['software_image_url'];
-            $transaction_request->from_profile_image_url = $url_result['profile_image_url'];
-            
-            $arr_have = array("title" => $game->title, "platform" => $game->platform, "software_image_url" => $game->file_path);
-            $input['have'][$i] = $arr_have;
-            
-        }
-        */
         for($i = 0; $i < sizeof($input['have']); $i++){
          
             $arr_have = $input['have'][$i];
@@ -298,12 +231,6 @@ try{
         "time" => $transaction_request->time, "date" => $transaction_request->date, "first_name" => $transaction_request->to_first_name, "recipient_id" => $transaction_request->to_id, "rating" => $transaction_request->to_id_rating, 
         ]]]); 
         
-        /*
-        $sql = "UPDATE user_ratings SET aggregate_score = aggregate_score + ? , number_transactions = number_transactions + 1,
-        rating = aggregate_score / number_transactions WHERE user_id = ?";
-        $pdo_statement = $pdo->prepare($sql);
-        $pdo_statement->execute([$transaction_request->to_id_rating, $transaction_request->to_id]);
-        */
         echo json_encode(array("transaction_complete" => true));
         
     }
@@ -422,11 +349,6 @@ try{
         
         $firebase_database = new FirebaseDB($firebase, "Transactions");
         $firebase_database->update_transaction("Transactions/" . $transaction_response->transaction_id . "/received", [$transaction_response->from_uid => $transaction_response->response]);
-        
-        /*
-        if($firebase_database->getNumChild("Transactions/" . $transaction_response->transaction_id . "/received") < 2)
-            return;
-        */
          
         $sql = "UPDATE transaction_table SET complete = 1 WHERE transaction_id = ?";
         $pdo_statement = $pdo->prepare($sql);
@@ -446,22 +368,6 @@ try{
         $firebase_database = new FirebaseDB($firebase, "Transactions");
         $entry = $firebase_database->query_transaction($transaction_request->transaction_id, $transaction_request->from_uid);
         
-        /*
-        if(is_array($entry['have'])){
-            
-            echo json_encode(array("array" => "entry is an array"));
-            
-            if(is_iterable($entry['have']))
-                echo json_encode(array("array" => "entry is iterable"));
-            else 
-                echo json_encode(array("array" => "entry is not iterable"));
-            
-            
-        }
-        else 
-            echo  json_encode(array("array" => "entry is not an array"));
-        return;
-   */
         if($entry === 0)
             echo json_encode(array("TRANSACTION_OPERATION_105_ERROR" => true));
         else{
@@ -502,11 +408,6 @@ try{
             
             $json_transaction_query = array("have" => $json_have, "want" => $json_want);
              echo json_encode($json_transaction_query);
-/*
-            $food = array("Apple" => array("Green Apple's", "Red Apple's"), "Grape's" => 4, "Orange's" => 6);
-            print_r($food);
-            echo json_encode(array("Number of Foods" => count($food['Apple']), $food));
- */
      
         }
         
@@ -514,15 +415,6 @@ try{
     else if($input['messaging_operation'] === 106){
        
         $recipient_software_library = array();
-        
-        /*
-        $sql = "SELECT user_id FROM users WHERE unique_id = ?";
-        $pdo_statement = $pdo->prepare($sql);
-        $pdo_statement->execute([$transaction_request->to_id]);
-        $query = $pdo_statement->fetchAll(PDO::FETCH_ASSOC);
-        
-        $recipient_id = $query[0];
-        */
         
         $sql = "SELECT title, platform, publisher, developer, upc, software_image_url FROM software_inventory WHERE user_id = ?";
         $pdo_statement = $pdo->prepare($sql);
