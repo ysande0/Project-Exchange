@@ -3,12 +3,9 @@
 $input = file_get_contents("php://input");
 $input = json_decode($input, true);
 
-
 $user_id = $input['uid'];
 $file_map = $input['file_map']; 
 $image_name = $input['image_name'];
-
-// Check if user_id and or file_map are empty
 
 if(empty($user_id) || empty($file_map) || empty($image_name)){
     
