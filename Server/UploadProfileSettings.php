@@ -1,8 +1,6 @@
 <?php
 
 $path = '/var/www/exchange_project/';
-//$path = 'C:/Web/Project/TheExchange Project/';
-//$private_crypt_key_path = $path . "keys/cryp_key.txt";
 
 require $path . 'vendor/autoload.php';
 require 'DatabaseLoginInfo.php';
@@ -18,7 +16,6 @@ $input = json_decode($input, true);
 
 $pdo = null;
 $user = new User();
-//$crypt_key = file_get_contents($private_crypt_key_path);
 $headers = apache_request_headers();
 
 $category = $input['category'];
@@ -35,7 +32,6 @@ $profile_image_encode_full = null;
 $profile_image_name_full = null;
 $dpi = null;
 $user->id = $input['id'];
-//$user_token = $headers['Authorization'];
 $user->access_token = $headers['Authorization'];
 
 
@@ -55,13 +51,7 @@ try{
 
 
 if($category === 100){
-
-/*
-    $token = new Token($pdo);
-    $token->set_user_id($user->id);
-    $token->set_token($user->access_token);
-    $session_timeout = $token->is_token_expired();
-    */
+    
     if($session_timeout){
         
         echo json_encode(array("session_timeout" => true));
@@ -75,55 +65,13 @@ if($category === 100){
     $dpi = $input['dpi'];
 
     $user->uid = $input['uid'];
-    /*
-    if(isset($input['image_encoded_thumbnail']) || isset($input['image_name_thumbnail']) || isset($input['image_encoded_full']) || isset($input['image_name_full'])){
-        
-            $profile_image_encode_thumbnail = $input['image_encoded_thumbnail'];
-            $profile_image_name_thumbnail = $input['image_name_thumbnail'];
-            
-            $profile_image_encode_full = $input['image_encoded_full'];
-            $profile_image_name_full = $input['image_name_full'];
-            
-    }
-   
     
-    if(empty($first_name) || empty($last_name) || empty($user_id) || empty($user_uid)){
-        echo json_encode(array("settings_upload_error" => true));
-        return;
-    }
-
-  if(!(empty($profile_image_encode_thumbnail)) || !(empty($profile_image_name_thumbnail))){
-      
-
-    $profile_image_path_thumbnail =  "C:/Web/Project/TheExchange Project/img/". $profile_image_name_thumbnail;
-    $profile_image_files = glob($profile_image_path_thumbnail);
-    
-    foreach ($profile_image_files as $file){
-        
-        if(is_file($file))
-            unlink($file);
-        
-    }
-    
-        $profile_image_path_thumbnail = "C:/Web/Project/TheExchange Project/img/". $profile_image_name_thumbnail;
-        file_put_contents($profile_image_path_thumbnail, base64_decode($profile_image_encode_thumbnail));
-        $profile_image_path_thumbnail = "http://192.168.1.242:80/Project/TheExchange%20Project/img/" . $profile_image_name_thumbnail;
-  
-    
-  }
-  */
-  
-      
      if(isset($input['image_encoded_full']) || isset($input['image_name_full'])){
             
 
 
             $user->profile_image_encode_full = $input['image_encoded_full'];
-            $user->profile_image_name_full = $input['image_name_full'];
-           // $user->profile_image_name_thumbnail = $input['image_name_thumbnail'];
-            
-            
-            
+            $user->profile_image_name_full = $input['image_name_full'];            
      }
      
      if(isset($input['image_encoded_thumbnail']) || isset($input['image_name_thumbnail'])){
@@ -145,15 +93,7 @@ if($category === 100){
       
           $image_resizer = new ImageResizer();
           $image_file_path = null;
-          /*
-          $xxxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxxhdpi/";
-          $xxhdpi_path = "C:/Web/Project/TheExchange Project/img/xxhdpi/";
-          $xhdpi_path = "C:/Web/Project/TheExchange Project/img/xhdpi/";
-          $hdpi_path = "C:/Web/Project/TheExchange Project/img/hdpi/";
-          $mdpi_path = "C:/Web/Project/TheExchange Project/img/mdpi/";
-          $ldpi_path = "C:/Web/Project/TheExchange Project/img/ldpi/";
-          */
-         
+     
           $xxxhdpi_path = "img/xxxhdpi/";
           $xxhdpi_path = "img/xxhdpi/";
           $xhdpi_path = "img/xhdpi/";
@@ -176,29 +116,6 @@ if($category === 100){
           if($dpi <= 120){
               
               // [LDPI]
-              /*
-              $profile_image_files = glob($ldpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                  
-                      
-              }
-              
-              $profile_image_files = glob($ldpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-                     
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($ldpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($ldpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-              */
                   
                   $result_image_full = $client->putObject( array(
                       
@@ -223,29 +140,6 @@ if($category === 100){
           }else if($dpi > 120 && $dpi <= 160){
               
               // [MDPI]
-              /*
-              $profile_image_files = glob($mdpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                  
-                      
-              }
-              
-              $profile_image_files = glob($mdpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($mdpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($mdpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-              */
                   $result_image_full = $client->putObject( array(
                       
                       'Bucket' => 'exchangeproject',
@@ -269,29 +163,7 @@ if($category === 100){
           else if($dpi > 160 &&  $dpi <= 240){
               
               // [HDPI]
-          /*
-              $profile_image_files = glob($hdpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                  
-                      
-              }
-              
-              $profile_image_files = glob($hdpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-                   
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($hdpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($hdpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-              */
+  
                   $result_image_full = $client->putObject( array(
                       
                       'Bucket' => 'exchangeproject',
@@ -315,28 +187,6 @@ if($category === 100){
           else if($dpi > 240 && $dpi <= 320){
               
               // [XHDPI]
-           /*
-              $profile_image_files = glob($xhdpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                  
-                      
-              }
-              
-              $profile_image_files = glob($xhdpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($xhdpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($xhdpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-              */
                   $result_image_full = $client->putObject( array(
                       
                       'Bucket' => 'exchangeproject',
@@ -361,30 +211,6 @@ if($category === 100){
               
               
               // [XXHDPI]
- /*
-              $profile_image_files = glob($xxhdpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                  
-                      
-              }
-              
-              $profile_image_files = glob($xxhdpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-                    
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($xxhdpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($xxhdpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-              */
-                  
                   $result_image_full = $client->putObject( array(
                       
                       'Bucket' => 'exchangeproject',
@@ -409,28 +235,6 @@ if($category === 100){
           else if($dpi > 480 && $dpi <= 640){
               
               // [XXXHDPI]
-              /*
-              $profile_image_files = glob($xxxhdpi_path . $user->profile_image_name_thumbnail);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file))
-                      unlink($file);
-                      
-              }
-              
-              $profile_image_files = glob($xxxhdpi_path . $user->profile_image_name_full);
-              foreach ($profile_image_files as $file){
-                  
-                  if(is_file($file)){
-                      
-                      unlink($file);
-                  }
-                      
-              }
-              
-              file_put_contents($xxxhdpi_path . $user->profile_image_name_full, base64_decode($user->profile_image_encode_full));
-              file_put_contents($xxxhdpi_path . $user->profile_image_name_thumbnail, base64_decode($user->profile_image_encode_thumbnail));
-      */
                   $result_image_full = $client->putObject( array(
                       
                       'Bucket' => 'exchangeproject',
@@ -463,9 +267,6 @@ else if($category === 101){
     $user->id = $input['id'];
     $user->uid = $input['uid'];
 }
-
-
-//$user_token = Crypto::decrypt($user_token, Key::loadFromAsciiSafeString($crypt_key));
 
 try{
     
@@ -506,8 +307,7 @@ try{
     
     
 }catch (PDOException $pdo_error){
-   
-    //$pdo_error->getMessage(); 
+
     echo json_encode(array("settings_upload_error" => "error 100: settings could not update"));
     $pdo = null;
     return;
