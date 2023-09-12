@@ -76,8 +76,6 @@ public class CameraActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_camera);
 
-        Log.d(TAG, "CameraActivity onCreate");
-
         texture_view =  findViewById(R.id.texture_view_id);
         texture_view.setSurfaceTextureListener(texture_listener);
 
@@ -94,23 +92,15 @@ public class CameraActivity extends AppCompatActivity {
 
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "CameraActivity onStart");
-    }
-
+    
     private final TextureView.SurfaceTextureListener texture_listener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-            Log.d(TAG, "[Texture Listener - onSurfaceTextureAvailable] Surface Texture Width: " + width + "  Height: " + height);
             open_camera();
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            Log.d(TAG, "[Texture Listener - onSurfaceTextureSizeChanged]");
     }
 
         @Override
@@ -128,7 +118,6 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
 
-            Log.d(TAG, "CameraDevice.StateCallback: onOpened");
             camera_device = camera;
             create_camera_preview();
 
@@ -136,38 +125,20 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         public void onDisconnected(@NonNull CameraDevice camera) {
-
-            Log.d(TAG, "CameraDevice.StateCallback: onDisconnected");
             close_camera();
-
         }
 
         @Override
         public void onClosed(@NonNull CameraDevice camera) {
             super.onClosed(camera);
-
-            Log.d(TAG, "CameraDevice.StateCallback: onClosed ");
             camera_device = camera;
             close_camera();
         }
 
         @Override
         public void onError(@NonNull CameraDevice camera, int error) {
-
-            Log.d(TAG, "CameraDevice.StateCallback: onClosed ");
             camera_device = camera;
-            Log.d(TAG, "Camera Device is not null");
-
             close_camera();
-            Log.d(TAG, "onError " + error);
-
-            if(error == ERROR_MAX_CAMERAS_IN_USE) {
-                Log.d(TAG, "ERROR_MAX_CAMERAS_IN_USE: camera device could not be opened because there are too many other open camera devices");
-                Log.d(TAG, "Number of Open Cameras " + counter);
-            }
-
-
-
         }
     };
 
@@ -176,8 +147,6 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
-
-            Log.d(TAG, "CameraCaptureSession.CaptureCallback: Capture Complete");
             create_camera_preview();
         }
     };
@@ -197,15 +166,12 @@ public class CameraActivity extends AppCompatActivity {
             StreamConfigurationMap stream_config_map = camera_characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert stream_config_map != null;
             image_dimensions = stream_config_map.getOutputSizes(SurfaceTexture.class)[0];
-            Log.d(TAG, "OpenCamera Image Dimension Width: " + image_dimensions.getWidth() + "  Height: " + image_dimensions.getHeight());
             counter++;
             camera_manager.openCamera(camera_id, camera_state_callback, null);
 
         }catch(CameraAccessException camera_access_error){
             camera_access_error.printStackTrace();
         }
-
-        Log.d(TAG, "Camera is Open");
     }
 
     private void close_camera(){
@@ -228,7 +194,6 @@ public class CameraActivity extends AppCompatActivity {
         }
         catch (InterruptedException error){
             error.printStackTrace();
-            Log.d(TAG, "Interruption while trying to lock camera closing");
         }finally {
             camera_open_close_lock.release();
         }
@@ -239,14 +204,9 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        Log.d(TAG, "REQUEST CODE " + requestCode + "  " + REQUESTED_CAMERA_PERMISSION);
         if(requestCode == REQUESTED_CAMERA_PERMISSION){
 
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-                Log.d(TAG, "Permission: DENIED");
-                Log.d(TAG, "Returning to calling activity");
                 finish();
             }
 
@@ -260,17 +220,11 @@ public class CameraActivity extends AppCompatActivity {
 
             SurfaceTexture surface_texture = texture_view.getSurfaceTexture();
 
-            if(surface_texture == null)
-                Log.d(TAG, "surface_texture is null");
-
             assert surface_texture != null;
             surface_texture.setDefaultBufferSize(image_dimensions.getWidth(), image_dimensions.getHeight());
 
 
             Surface surface = new Surface(surface_texture);
-
-            if(camera_device == null)
-                Log.d(TAG, "create_camera_preview: camera device is null");
 
             capture_request_builder = camera_device.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             capture_request_builder.addTarget(surface);
@@ -280,7 +234,6 @@ public class CameraActivity extends AppCompatActivity {
                 public void onConfigured(@NonNull CameraCaptureSession session) {
 
                     if(camera_device == null) {
-                        Log.d(TAG, "create_camera_preview (camera_device): onConfigured");
                         return;
                     }
 
@@ -307,7 +260,6 @@ public class CameraActivity extends AppCompatActivity {
     private void update_camera_preview(){
 
         if(camera_device == null) {
-            Log.d(TAG, "update preview error. Returning");
             return;
         }
 
@@ -328,22 +280,13 @@ public class CameraActivity extends AppCompatActivity {
 
         background_handler_thread = new HandlerThread("Camera Background");
         background_handler_thread.start();
-        if(background_handler_thread == null)
-            Log.d(TAG, "start_background_thread: Background handler thread is null");
         background_handler = new Handler(background_handler_thread.getLooper());
-
-        if(background_handler_thread == null)
-            Log.d(TAG, "start_background_thread: Background handler thread is null");
 
     }
 
     private void stop_background_thread(){
 
-        if(background_handler_thread == null)
-            Log.d(TAG, "stop_background_thread: Background handler thread is null");
-
         if(background_handler_thread != null) {
-            Log.d(TAG, "stop_background_thread: Background handler thread is NOT null");
             close_camera();
             background_handler_thread.quitSafely();
             try {
@@ -363,7 +306,6 @@ public class CameraActivity extends AppCompatActivity {
 
         if(camera_device == null){
 
-            Log.d(TAG, "Capture Image: device camera is null");
             return;
         }
 
@@ -373,12 +315,10 @@ public class CameraActivity extends AppCompatActivity {
 
             //noinspection unused
             CameraCharacteristics camera_characteristics = camera_manager.getCameraCharacteristics(camera_device.getId());
-            Log.d(TAG, "Camera ID: " + camera_device.getId());
 
             int width = 1920;
             int height = 1080;
-            Log.d(TAG, "YUV Width: " + width + "  Height: " + height);
-            // image_reader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.YUV_420_888, 1);
+    
             image_reader = ImageReader.newInstance(width, height, ImageFormat.YUV_420_888, 1);
             List<Surface> output_surface = new ArrayList<>(1);
             output_surface.add(image_reader.getSurface());
@@ -398,9 +338,6 @@ public class CameraActivity extends AppCompatActivity {
 
                     //noinspection ConstantConditions
                     upc_image = image;
-                    Log.d(TAG, "CameraActivity: UPC Image is not null");
-
-                    Log.d(TAG, "CameraActivity Image Width: " + upc_image.getWidth() + "  Height: " + upc_image.getHeight() );
 
                     ScannerBarcode scanner_barcode = new ScannerBarcode(CameraActivity.this, CameraActivity.this, upc_image);
                     scanner_barcode.has_storage_capacity();
@@ -418,10 +355,6 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Log.d(TAG, "CameraCaptureSession.CaptureCallback: onCaptureCompleted");
-                    Log.d(TAG, "Capture Image: Image captured");
-
-
                     create_camera_preview();
                 }
             };
@@ -431,7 +364,6 @@ public class CameraActivity extends AppCompatActivity {
                 public void onConfigured(@NonNull CameraCaptureSession session) {
 
                     try{
-                        Log.d(TAG, "capture_image (capture_image): onConfigured");
                         session.capture(capture_builder.build(), capture_callback, background_handler);
 
                     }catch (CameraAccessException camera_access_error){
@@ -459,7 +391,6 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "CameraActivity onResume");
 
         start_background_thread();
 
@@ -473,17 +404,9 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "CameraActivity onPause");
-
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 
-        Log.d(TAG, "CameraActivity onStop");
         stop_background_thread();
 
     }
@@ -491,6 +414,5 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "CameraActivity onDestroy");
     }
 }
