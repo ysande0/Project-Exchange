@@ -90,15 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_home);
 
-        Log.d(TAG, "HomeActivity onCreate");
-
         app = ((App) getApplicationContext());
-
-        if (app.is_location_permission_granted()) {
-
-            Log.d(TAG, "[HomeActivity] Location is enabled");
-        } else
-            Log.d(TAG, "[HomeActivity] Location is disabled");
 
         EventBus.getDefault().register(this);
 
@@ -118,20 +110,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
-/*
-        location_callback_weak_reference = new WeakReference<>(new LocationCallback(){
-
-            @Override
-            public void onLocationResult(LocationResult location_result) {
-                super.onLocationResult(location_result);
-
-                update(location_result.getLastLocation());
-            }
-
-
-        });
-*/
-        // home_activity_view_model = ViewModelProviders.of(this).get(HomeActivityViewModel.class);
         home_activity_view_model = new ViewModelProvider(this).get(HomeActivityViewModel.class);
 
         ActionBar action_bar = getSupportActionBar();
@@ -141,61 +119,19 @@ public class HomeActivity extends AppCompatActivity {
         @SuppressWarnings("unused") ViewPager view_pager = findViewById(R.id.home_view_pager_id);
 
         fragment_manager = getSupportFragmentManager();
-        //current_fragment = new ConversationsFragment();
-        /*
-        if(savedInstanceState != null){
 
-            fragment_tag = savedInstanceState.getString("current_fragment");
-
-            assert fragment_tag != null;
-            switch (fragment_tag) {
-                case "fragment_conversations_id":
-
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, conversation_fragment, "fragment_conversations_id").commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, home_fragment, "fragment_home_id").hide(home_fragment).commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, inventory_fragment, "fragment_inventory_id").hide(inventory_fragment).commit();
-                    current_fragment = conversation_fragment;
-                    Log.d(TAG, "Rotating: CONVERSATIONS FRAGMENT");
-                    break;
-
-                case "fragment_home_id":
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, conversation_fragment, "fragment_conversations_id").hide(conversation_fragment).commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, home_fragment, "fragment_home_id").commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, inventory_fragment, "fragment_inventory_id").hide(inventory_fragment).commit();
-                    current_fragment = home_fragment;
-                    Log.d(TAG, "Rotating: HOME FRAGMENT");
-                    break;
-                case "fragment_inventory_id":
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, conversation_fragment, "fragment_conversations_id").hide(conversation_fragment).commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, home_fragment, "fragment_home_id").hide(home_fragment).commit();
-                    fragment_manager.beginTransaction().add(R.id.fragment_container_id, inventory_fragment, "fragment_inventory_id").commit();
-                    current_fragment = inventory_fragment;
-                    Log.d(TAG, "Rotating: INVENTORY FRAGMENT");
-                    break;
-            }
-
-        }
-        else {
-            fragment_tag = "fragment_conversations_id";
-
-        }
-*/
         bottom_navigation = findViewById(R.id.bottom_navigation_id);
         bottom_navigation.setOnNavigationItemSelectedListener(menuItem -> {
 
-            Log.d(TAG, "Home Activity onNavigationItem");
-            Log.d(TAG, "Menu Item: " + menuItem.getItemId());
             switch (menuItem.getItemId()) {
 
                 case R.id.nav_conversation_id:
-                    Log.d(TAG, "HomeActivity: Conversation Fragment");
                     fragment_manager.beginTransaction().hide(current_fragment).show(conversation_fragment).commit();
                     current_fragment = conversation_fragment;
                     fragment_tag = "fragment_conversations_id";
                     break;
 
                 case R.id.nav_home_id:
-                    Log.d(TAG, "HomeActivity: Home Fragment");
                     fragment_manager.beginTransaction().hide(current_fragment).show(home_fragment).commit();
                     current_fragment = home_fragment;
                     fragment_tag = "fragment_home_id";
@@ -204,7 +140,6 @@ public class HomeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.nav_inventory_id:
-                    Log.d(TAG, "HomeActivity: Inventory Fragment");
                     fragment_manager.beginTransaction().hide(current_fragment).show(inventory_fragment).commit();
                     current_fragment = inventory_fragment;
                     fragment_tag = "fragment_inventory_id";
@@ -212,17 +147,12 @@ public class HomeActivity extends AppCompatActivity {
 
             }
 
-            Log.d(TAG, "(BottomNavigation) Back Stack Count: " + fragment_manager.getBackStackEntryCount());
-
             return true;
         });
 
-
-        Log.d(TAG, "HomeActivity Back Stack Count: " + fragment_manager.getBackStackEntryCount());      //  home_activity_view_model.load_notification_badges(HomeActivity.this, bottom_navigation, UserInterface.HOME_ACTIVITY);
         fragment_manager.beginTransaction().add(R.id.fragment_container_id, conversation_fragment, "fragment_conversations_id").commit();
         fragment_manager.beginTransaction().add(R.id.fragment_container_id, home_fragment, "fragment_home_id").hide(home_fragment).commit();
         fragment_manager.beginTransaction().add(R.id.fragment_container_id, inventory_fragment, "fragment_inventory_id").hide(inventory_fragment).commit();
-        //     location_updates();
         start_location_updates();
 
     }
@@ -231,33 +161,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "HomeActivity onStart");
-        Log.d(TAG, "HomeActivity is_home_foreground: " + is_home_activity_foreground);
 
+        
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "HomeActivity onResume");
-/*
-        location_callback_weak_reference = new WeakReference<>(new LocationCallback(){
-
-            @Override
-            public void onLocationResult(LocationResult location_result) {
-                super.onLocationResult(location_result);
-
-                update(location_result.getLastLocation());
-                start_location_updates();
-                Log.d(TAG, "[HomeActivity] onLocationResult Size: " + location_result.getLocations().size());
-            }
-
-
-        });
-*/
-
-        //  location_updates();
-        // start_location_updates();
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         home_activity_view_model.load_notification_badges(app, HomeActivity.this, bottom_navigation,
@@ -269,8 +179,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NotNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
 
-        Log.d(TAG, "HomeActivity onSaveInstanceState: " + fragment_tag);
-        //out_state.putParcelableArrayList("conversation_entries", this.conversation_entries);
         out_state.putString("current_fragment", fragment_tag);
 
     }
@@ -278,9 +186,7 @@ public class HomeActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Message message) {
 
-
         final String MSG = "TAG";
-        Log.d(MSG, "[HomeActivity] onEvent First name: " + message.first_name + " message: " + message.message);
         home_activity_view_model.load_notification_badges(app, HomeActivity.this, bottom_navigation, UserInterface.HOME_ACTIVITY, is_home_activity_foreground);
     }
 
@@ -289,37 +195,19 @@ public class HomeActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        Log.d(TAG, "HomeActivity onPause");
-/*
-        if(location_callback_weak_reference.get() != null){
-
-            if(fused_location_provider_client_weak_reference.get() != null)
-                    stop_location_updates();
-
-            location_callback_weak_reference.clear();
-        }
-*/
-
-        //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        Log.d(TAG, "HomeActivity onStop");
-
         is_home_activity_foreground = false;
-
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "HomeActivity onDestroy");
         current_fragment = null;
         EventBus.getDefault().unregister(this);
     }
@@ -368,7 +256,6 @@ public class HomeActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            Log.d(TAG, "Getting user location permission");
             ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUESTED_LOCATION_PERMISSION);
         }
 
@@ -379,13 +266,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-            Log.d(TAG, "LoginActivity Permission Denied");
+            
             app.set_location_permission(false);
 
         } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-            Log.d(TAG, "LoginActivity Permission Granted");
             app.set_location_permission(true);
             start_location_updates();
         }
@@ -417,9 +302,6 @@ public class HomeActivity extends AppCompatActivity {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
-
-         Log.d(TAG, "App Latitude: " + latitude + "    Longitude: " + longitude);
-
         Bundle bundle = new Bundle();
         bundle.putDouble("latitude", latitude);
         bundle.putDouble("longitude", longitude);
@@ -439,8 +321,7 @@ public class HomeActivity extends AppCompatActivity {
             json_object.put("id", UserSettings.get_user_id(getApplicationContext()));
             json_object.put("latitude", latitude);
             json_object.put("longitude", longitude);
-            //json_object.put("radius", UserSettings.get_user_radius(getApplicationContext()));
-
+      
             home_activity_view_model.update_location_remote(getApplicationContext(), json_object);
 
         }catch (JSONException json_error){
@@ -451,26 +332,22 @@ public class HomeActivity extends AppCompatActivity {
 
         if (has_low_storage) {
             Toast.makeText(getApplicationContext(),"Low Storage, Manaphest may not function optimally", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "HomeActivity: Low Storage");
         }
 
         Account account = new Account(email, getString(R.string.account_type));
         ContentResolver.setMasterSyncAutomatically(true);
         ContentResolver.requestSync(account, getString(R.string.content_authority), bundle);
 
-
     }
 
     private void start_location_updates(){
 
         location_updates();
-        Log.d(TAG, "Start Location Updates");
     }
 
     private void stop_location_updates(){
 
         fused_location_provider_client_weak_reference.get().removeLocationUpdates(location_callback_weak_reference.get());
-        Log.d(TAG, "Stop Location Updates");
     }
 
     private void launch_profile_settings_activity(){
@@ -481,11 +358,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void launch_profile_platforms_activity(){
-
-        /*
-        Intent intent = new Intent(HomeActivity.this, HardwareInventoryActivity.class);
-        startActivity(intent);
-         */
 
         HardwareLibraryDialog hardware_library_dialog = new HardwareLibraryDialog();
         hardware_library_dialog.show(fragment_manager, "Hardware_Library_Dialog");
