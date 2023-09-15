@@ -66,7 +66,6 @@ public class HomeUserSoftwareProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_user_software_profile);
 
-        Log.d(TAG, "[HomeUserSoftwareProfileActivity] onCreate");
         app = ((App) getApplicationContext());
 
         if(getIntent().hasExtra("user"))
@@ -98,10 +97,6 @@ public class HomeUserSoftwareProfileActivity extends AppCompatActivity {
 
         software_imageview = findViewById(R.id.home_user_software_imageView_id);
 
-
-        Log.d(TAG, "[HomeUserSoftwareProfileActivity] Software Image Thumbnail URL: " + user.software.software_image_thumbnail_url);
-        Log.d(TAG, "[HomeUserSoftwareProfileActivity] Software Image Full URL: " + user.software.software_image_full_url);
-
         Glide.with(HomeUserSoftwareProfileActivity.this).asDrawable()
                 .load(user.software.software_image_full_url)
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
@@ -119,8 +114,6 @@ public class HomeUserSoftwareProfileActivity extends AppCompatActivity {
 
                     @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                Log.d(TAG, "[HomeUserSoftwareProfileActivity] RESOURCE IS NOT NULL");
 
                 ImageSaver image_saver = new ImageSaver();
                 Bitmap source_bitmap = drawable_to_bitmap(resource);
@@ -207,8 +200,7 @@ public class HomeUserSoftwareProfileActivity extends AppCompatActivity {
         software_distance_textView.setText(user.user_distance);
 
         TextView user_description = findViewById(R.id.home_user_description_textView_id);
-
-        Log.d(TAG, "Description: " + user.software.user_description);
+        
         user_description.setText(user.software.user_description);
 
         load_banner_ad();
