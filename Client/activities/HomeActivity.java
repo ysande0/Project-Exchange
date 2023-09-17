@@ -186,7 +186,6 @@ public class HomeActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Message message) {
 
-        final String MSG = "TAG";
         home_activity_view_model.load_notification_badges(app, HomeActivity.this, bottom_navigation, UserInterface.HOME_ACTIVITY, is_home_activity_foreground);
     }
 
