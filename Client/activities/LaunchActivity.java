@@ -31,33 +31,28 @@ public class LaunchActivity extends AppCompatActivity {
 
         if(dpi_classification <= 120){
 
-            Log.d(TAG, "[LaunchActivity] Client device is ldpi");
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.ldpi_label));
         }
         else if(dpi_classification <= 160){
 
-            Log.d(TAG, "[LaunchActivity] Client device is mdpi");
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.mdpi_label));
         }
         else if(dpi_classification <= 240){
 
-            Log.d(TAG, "[LaunchActivity] Client device is hdpi");
+
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.hdpi_label));
 
         }
         else if(dpi_classification <= 320){
 
-            Log.d(TAG, "[LaunchActivity] Client device is xhdpi");
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.xhdpi_label));
         }
         else if(dpi_classification <= 480){
 
-            Log.d(TAG, "[LaunchActivity] Client device is xxhdpi");
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.xxhdpi_label));
         }
         else if(dpi_classification <= 640){
 
-            Log.d(TAG, "[LaunchActivity] Client device is xxxhdpi");
             UserSettings.set_dpi(LaunchActivity.this, getString(R.string.xxxhdpi_label));
 
         }
@@ -67,10 +62,8 @@ public class LaunchActivity extends AppCompatActivity {
         app = ((App) getApplicationContext());
 
         int SPLASH_SCREEN_TIMEOUT = 4000;
-       // int SPLASH_SCREEN_TIMEOUT = 36000000;
         new Handler().postDelayed(() -> {
-
-           Log.d(TAG, "Launching Exchange Application [ Run() ]");
+            
            launch_application();
 
        }, SPLASH_SCREEN_TIMEOUT);
