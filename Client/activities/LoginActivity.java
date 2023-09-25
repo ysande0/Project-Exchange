@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
         //noinspection ConstantConditions
         getSupportActionBar().hide();
-       // login_activity_view_model = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
         login_activity_view_model = new ViewModelProvider(this).get(LoginActivityViewModel.class);
         login_activity_view_model.set_context(LoginActivity.this);
 
@@ -64,12 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         login_activity_view_model.set_app(app);
         login_activity_view_model.set_firebase_auth(firebase_auth);
 
-
-       //  launch_home_activity();
-
         check_permission();
-        Log.d(TAG,"Login Activity onCreate");
-
         Email_editText = findViewById(R.id.email_editText_id);
 
         login_progress_bar = findViewById(R.id.login_progress_bar_circular_id);
@@ -135,8 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-
-            Log.d(TAG, "Getting user location permission");
+            
             ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUESTED_LOCATION_PERMISSION);
         }
 
@@ -147,15 +140,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
-
-            Log.d(TAG, "LoginActivity Permission Denied");
+            
             app.set_location_permission(false);
             location_tracking_permission();
 
         }
         else if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
-            Log.d(TAG, "LoginActivity Permission Granted");
             app.set_location_permission(true);
         }
 
@@ -202,8 +193,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
 
-        Log.d(TAG,"Login Activity onStart");
-
     }
 
     protected void onSaveInstanceState(@NotNull Bundle out_state){
@@ -226,36 +215,27 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
 
-        Log.d(TAG,"Login Activity onResume");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     }
 
     protected  void onPause(){
         super.onPause();
-       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-        Log.d(TAG,"Login Activity onPause");
 
     }
 
     protected void onStop(){
         super.onStop();
 
-        Log.d(TAG,"Login Activity onStop");
-
     }
 
     protected void onRestart(){
         super.onRestart();
 
-        Log.d(TAG,"Login Activity onRestart");
-
     }
 
     protected void onDestroy(){
         super.onDestroy();
-
-        Log.d(TAG,"Login Activity onDestroy");
 
     }
 
