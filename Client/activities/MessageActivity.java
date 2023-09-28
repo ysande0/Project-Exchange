@@ -104,9 +104,6 @@ public class MessageActivity extends AppCompatActivity  {
 
         conversation_entry = new ConversationEntry();
 
-        Log.d(TAG, "Executing....");
-        //Log.d(TAG, "[Message Activity] First Name: " + conversation_entry.current_user.first_name + "  UID: " + conversation_entry.current_user.id);
-
         if(getIntent().hasExtra("user")) {
             // New Conversation
 
@@ -114,10 +111,7 @@ public class MessageActivity extends AppCompatActivity  {
             user = getIntent().getExtras().getParcelable("user");
 
             assert user != null;
-               // Log.d(TAG, "[MessageActivity] con_entry current user_id: " + con_entry.conversation_id);
-             // Log.d(TAG, "[MessageActivity] recipient user id: " + user.id + " first name: " + user.first_name + " fcm_token: " + user.fcm_token + " distance: " + user.user_distance + " user url: " + user.user_image_url);
-
-            Log.d(TAG, "[MessageActivity] recipient user id: " + user.id + " first name: " + user.first_name + " distance: " + user.user_distance + " user  thumbnail url: " + user.user_image_thumbnail_url);
+            
             conversation_entry.current_user.first_name = UserSettings.get_user_first_name(this);
             conversation_entry.current_user.id = UserSettings.get_user_id(this);
             conversation_entry.current_user.user_image_thumbnail_url = UserSettings.get_user_profile_image_thumbnail_url(this);
@@ -126,13 +120,9 @@ public class MessageActivity extends AppCompatActivity  {
             Log.d(TAG, "Current user id: " + conversation_entry.current_user.id);
             conversation_entry.recipient_user.first_name = user.first_name;
             conversation_entry.recipient_user.id = user.id;
-
-            // conversation_entry.recipient_user.software = user.software;
-           // conversation_entry.software.software_image_url = user.software.software_image_url;
+            
             conversation_entry.recipient_user.user_image_thumbnail_url = user.user_image_thumbnail_url;
             conversation_entry.recipient_user.user_image_full_url = user.user_image_full_url;
-          //  conversation_entry.recipient_user.fcm_token = user.fcm_token;
-
 
             if(getIntent().getExtras().getString("conversation_id") != null)
                 conversation_entry.conversation_id = getIntent().getExtras().getString("conversation_id");
@@ -148,9 +138,7 @@ public class MessageActivity extends AppCompatActivity  {
 
 
         if(getIntent().hasExtra("conversation_entry")) {
-            // New User
-            // Resuming old conversation
-
+            
             Log.d(TAG, "MessageActivity: Came from FirebaseMessaging");
             @SuppressWarnings("ConstantConditions") ConversationEntry conversation_entry_data = getIntent().getExtras().getParcelable("conversation_entry");
 
@@ -162,32 +150,18 @@ public class MessageActivity extends AppCompatActivity  {
 
             conversation_entry.recipient_user.first_name = conversation_entry_data.recipient_user.first_name;
             conversation_entry.recipient_user.id = conversation_entry_data.recipient_user.id;
-         //   Toast.makeText(MessageActivity.this, "Recipient User ID: (" + conversation_entry.recipient_user.id + ")", Toast.LENGTH_LONG).show();
             conversation_entry.recipient_user.user_image_thumbnail_url = conversation_entry_data.recipient_user.user_image_thumbnail_url;
             conversation_entry.recipient_user.user_image_full_url = conversation_entry_data.recipient_user.user_image_full_url;
-            Log.d(TAG, "[MessageActivity] Recipient Image Full URL: " + conversation_entry.recipient_user.user_image_full_url);
             conversation_entry.conversation_id = conversation_entry_data.conversation_id;
             conversation_entry.recent_message = conversation_entry_data.recent_message;
 
             messages = conversation_entry_data.messages;
-
-            Log.d(TAG, "[MessageActivity] Conversation ID : " + conversation_entry.conversation_id);
-            Log.d(TAG, "[MessageActivity] Message Size: " + messages.size() + " recipient " + conversation_entry.recent_message.message);
-            for(int i = 0; i < messages.size(); i++){
-
-                Log.d(TAG, "[MessageActivity] " + messages.get(i).first_name + " : " + messages.get(i).message);
-
-            }
-
-            //message_recycle_view_adapter = new MessageRecycleViewAdapter(MessageActivity.this, messages, UserSettings.get_user_id(MessageActivity.this), conversation_entry);
-            //message_activity_view_model.load_conversation(message_recycleView, message_recycle_view_adapter, conversation_entry);
+            
             int update_type = 1;
             message_activity_view_model.update_local_database(conversation_entry.conversation_id, DatabaseOperations.UPDATE, update_type);
             Log.d(TAG, "[Message Activity] Before MessageRecycleViewAdapter First Name: " + conversation_entry.current_user.first_name + "  UID: " + conversation_entry.current_user.id );
         }
-
-      //  Toast.makeText(MessageActivity.this, "ID: " + conversation_entry.recipient_user.id + " First Name: " + conversation_entry.recipient_user.first_name , Toast.LENGTH_LONG).show();
-
+        
         if(savedInstanceState != null){
 
             user = savedInstanceState.getParcelable("user");
@@ -253,8 +227,7 @@ public class MessageActivity extends AppCompatActivity  {
 
             int orientation = getResources().getConfiguration().orientation;
             if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-
-                Log.d(TAG, "MessageActivity onCreate(): Dismiss ActionBar");
+                
                 action_bar.hide();
             }
 
@@ -300,8 +273,6 @@ public class MessageActivity extends AppCompatActivity  {
             linear_layout_manager.scrollToPositionWithOffset(messages.size() - 1, 0);
             Log.d(TAG, "[MessageActivity] onCreate smoothScrollToPosition");
         }
-        else
-            Log.d(TAG, "[MessageActivity] NOT onCreate smoothScrollToPosition");
 
         if(is_transaction_request_icon){
 
@@ -346,59 +317,31 @@ public class MessageActivity extends AppCompatActivity  {
                 web_socket.close(1000, null);
             }
         }).start();
-
-        Log.d(TAG, "[MessageActivity] Web socket Deinitialized");
+        
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MessageReceived message_receive){
 
-        /*
-        *  Determine if this message conversation id matches the current activities conversation id
-        *  if they match, notify the Message adapter informing the user that the message was sent.
-        *  if they do not match, then do nothing
-        */
 
-        Log.d(TAG, "[MessageActivity] onEvent");
         if(!message_receive.is_from_server) {
 
             if (conversation_entry.conversation_id.equals(message_receive.conversation_id)) {
 
-                Log.d(TAG, "[FCM] Message Received message id: " + message_receive.id + "  message delivered status: " + message_receive.message_delivered);
                 message_recycle_view_adapter.update_is_received(message_receive.id);
                 message_recycle_view_adapter.notifyDataSetChanged();
             }
         }
-        /*
-        else{
-
-            if (conversation_entry.conversation_id.equals(message_receive.conversation_id)) {
-
-                Log.d(TAG, "[FCM] New Message Received message id: " + message_receive.id + "  conversation id: " + message_receive.conversation_id);
-
-                final int update_type = 1;
-                message_activity_view_model.update_local_database(message_receive.conversation_id, DatabaseOperations.UPDATE, update_type);
-                message_recycle_view_adapter.addMessage(message);
-                message_recycle_view_adapter.notifyDataSetChanged();
-                message_recycleView.smoothScrollToPosition(message_recycle_view_adapter.getItemCount() - 1);
-
-            }
-
-        }
-*/
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Message message){
 
-        Log.d(TAG, "[MessageActivity] New Message from " + message.first_name + " : " + message.message);
         
         if(!message.is_read) {
 
             if (conversation_entry.conversation_id.equals(message.conversation_id)) {
-
-                Log.d(TAG, "[FCM] New Message Received message id: " + message.id + "  conversation id: " + message.conversation_id + " message: " + message.message);
 
                 final int update_type = 1;
                 conversation_entry.recent_message = message;
@@ -520,12 +463,8 @@ public class MessageActivity extends AppCompatActivity  {
 
 
         int NOTIFICATION_ID = 0;
-        Log.d(TAG, "[MessageActivity] Notification int: " + NOTIFICATION_ID);
         NotificationManager notification_manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notification_manager.cancel(conversation_entry.conversation_id, NOTIFICATION_ID);
-
-        //notification_manager.cancel(NOTIFICATION_ID);
-
     }
 
 
@@ -533,12 +472,9 @@ public class MessageActivity extends AppCompatActivity  {
     public void onStart(){
         super.onStart();
 
-        Log.d(TAG, "MessageActivity onStart");
-
         cancel_notification();
        initialize_web_sockets();
-
-       Log.d(TAG, "[MessageActivity] recent_message: " + conversation_entry.recent_message.message);
+        
        if(!conversation_entry.recent_message.is_read){
 
            MessageRead message_read = new MessageRead();
@@ -554,7 +490,6 @@ public class MessageActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "MessageActivity onResume");
     }
 
 
@@ -581,22 +516,17 @@ public class MessageActivity extends AppCompatActivity  {
         super.onPause();
 
        deinitialize_web_sockets();
-        Log.d(TAG, "MessageActivity onPause");
 
     }
 
     @Override
     public void onStop(){
         super.onStop();
-
-        Log.d(TAG, "MessageActivity onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Log.d(TAG, "MessageActivity onDestroy");
 
         EventBus.getDefault().unregister(this);
         sound_pool.release();
