@@ -89,8 +89,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     private ProgressBar progress_bar;
     private GestureDetector gesture_detector;
 
-   // private static final int REQUEST_PROFILE_IMAGE_CAPTURE  = 1;
-   // private static final int REQUEST_PROFILE_IMAGE_GALLERY = 2;
     private static final String TAG = "MSG";
     private static int current_value = 100;
 
@@ -129,19 +127,18 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_settings);
 
         app = ((App) getApplicationContext());
-
-       // profile_settings_activity_view_model = ViewModelProviders.of(this).get(ProfileSettingsActivityViewModel.class);
+        
         profile_settings_activity_view_model = new ViewModelProvider(this).get(ProfileSettingsActivityViewModel.class);
         first_name = UserSettings.get_user_first_name(ProfileSettingsActivity.this);
         last_name = UserSettings.get_user_last_name(ProfileSettingsActivity.this);
         current_value = UserSettings.get_user_radius(ProfileSettingsActivity.this);
         image_saver = new ImageSaver();
         String user_image_full_url = UserSettings.get_user_profile_image_full_url(ProfileSettingsActivity.this);
-        Log.d(TAG, "[ProfileSettingsActivity] User Full URL: " + user_image_full_url);
+  
 
         uid = UserSettings.get_user_uid(ProfileSettingsActivity.this);
         id = UserSettings.get_user_id(ProfileSettingsActivity.this);
-        Log.d(TAG, "ProfileSettingsActivity onCreate");
+   
 
         ActionBar action_bar = getSupportActionBar();
 
@@ -170,8 +167,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
 
-           // encoded_bitmap_thumbnail = savedInstanceState.getString(getResources().getString(R.string.image_encoded_thumbnail_key));
-           // encoded_bitmap_full = savedInstanceState.getString(getResources().getString(R.string.image_encoded_full_key));
             profile_image_bitmap = profile_settings_activity_view_model.get_bitmap_live_data();
             is_beginner = savedInstanceState.getBoolean(getResources().getString(R.string.is_beginner_key));
             has_returned = savedInstanceState.getBoolean("has_returned");
@@ -190,8 +185,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
 
                             progress_bar.setVisibility(View.VISIBLE);
-                            //profile_image_bitmap = drawable_to_bitmap(ResourcesCompat.getDrawable(getResources(), R.drawable.default_profile_image, null));
-
                             RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(getResources(), drawable_to_bitmap(ResourcesCompat.getDrawable(getResources(), R.drawable.default_profile_image, null)));
                             circular_bitmap_drawable.setCircular(true);
                             profile_image_view.setImageDrawable(circular_bitmap_drawable);
@@ -247,7 +240,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
                             }
 
-                            Log.d(TAG, "[ProfileSettingsActivity] Preview Width: " + preview_image_width + "  Preview Height: " + preview_image_height);
                             profile_image_bitmap = scale_bitmap(drawable_to_bitmap(resource), preview_image_width, preview_image_height);
 
                             RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(getResources(), profile_image_bitmap);
@@ -291,7 +283,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         dpi_classification = display_metrics.densityDpi;
-        Log.d(TAG, "[ProfileSettingsActivity] DPI: " + dpi_classification);
 
         setting_distance_seekBar.setProgress(current_value);
         setting_distance_seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -395,46 +386,29 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
             UserSettings.set_user_radius(ProfileSettingsActivity.this, current_value);
 
-           // encoded_bitmap = image_saver.encoded_bitmap(profile_image_bitmap);
-            //profile_image_filepath = image_saver.get_absolute_path(); // <-- Save on client
-            //profile_name = uid + ".jpg";
-
             if(!(UserSettings.get_encoded_bitmap_thumbnail(getApplicationContext()).isEmpty())) {
 
                 encoded_bitmap_thumbnail = UserSettings.get_encoded_bitmap_thumbnail(getApplicationContext());
-                Log.d(TAG, "[ProfileSettingsActivity] encoded_thumbnail: " +  encoded_bitmap_thumbnail);
 
             }
 
             if(!(UserSettings.get_encoded_bitmap_full(getApplicationContext()).isEmpty())) {
                 encoded_bitmap_full = UserSettings.get_encoded_bitmap_full(getApplicationContext());
-               //Log.d(TAG, "[ProfileSettingsActivity] encoded_full: " +  encoded_bitmap_full);
+
             }
 
             if(encoded_bitmap_full != null  &&  encoded_bitmap_thumbnail != null) {
 
                 profile_name_thumbnail = uid + "_thumbnail" + ".jpg";
                 profile_name_full = uid + "_full" + ".jpg";
-                Log.d(TAG, "[ProfileSettingsActivity] profile_name_full and profile_name_thumbnail are not null");
+
             }
-            else
-                Log.d(TAG, "[ProfileSettingsActivity] profile_name_full and profile_name_thumbnail are null");
-
-
-            Log.d(TAG, "[ProfileSettingsActivity] profile name full: " + profile_name_full + "  profile name thumbnail: " + profile_name_thumbnail);
 
             profile_settings_activity_view_model.remote_server(app,ProfileSettingsActivity.this, progress_bar, first_name,
                     last_name, profile_name_thumbnail, profile_name_full, encoded_bitmap_thumbnail, encoded_bitmap_full, uid, id, is_beginner, dpi_classification);
 
-            /*
-            Log.d(TAG, "ProfileSettingsActivity ID: " + id);
-            Log.d(TAG, "ProfileSettingsActivity UID: " + uid);
-            Log.d(TAG, "ProfileSettingsActivity Saving: " + profile_name_thumbnail);
-            Log.d(TAG, "---> ProfileSettingsActivity Saving: " + encoded_bitmap_thumbnail);
-*/
             if (is_beginner) {
-
-                Log.d(TAG, "Launching Hardware Activity ");
+                
                 Intent intent = new Intent(this, HardwareInventoryActivity.class);
                 intent.putExtra("Beginner", true);
                 startActivity(intent);
@@ -565,8 +539,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.d(TAG, "[ProfileSettingActivity] Permissions granted. Launching Camera...");
-                // Launch Camera
                 launch_camera();
 
             });
@@ -583,7 +555,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
 
                         Uri file_uri_captured = Uri.fromFile(image_file);
-                      //  file_uri_captured = result.getData().getData();
                         try {
 
                             DisplayMetrics display_metrics = new DisplayMetrics();
@@ -670,13 +641,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
 
                             profile_image_bitmap = image_saver.decode_image_from_file(UserSettings.get_user_local_profile_image_path(ProfileSettingsActivity.this), full_image_width, full_image_height);
-                            //encoded_bitmap_full = image_saver.encoded_bitmap(profile_image_bitmap, QUALITY);
-                            //encoded_bitmap_thumbnail = image_saver.encoded_bitmap(image_saver.scale_bitmap(profile_image_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY);
+
                            UserSettings.set_encoded_bitmap_thumbnail(getApplicationContext(), image_saver.encoded_bitmap(image_saver.scale_bitmap(profile_image_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY));
                            UserSettings.set_encoded_bitmap_full(getApplicationContext(), image_saver.encoded_bitmap(profile_image_bitmap, QUALITY));
-                            // profile_name_thumbnail = uid + "_thumbnail" + ".jpg";
-                            // profile_name_full = uid + "_full" + ".jpg";
-                         //   Log.d(TAG, "[ProfileSettingsActivity] Encoded Bitmap: " + encoded_bitmap_full);
+
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -700,8 +668,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
             if(uri_result != null) {
                 try {
-
-                    Log.d(TAG, "[ProfileSettingsActivity] Could retrieve image");
 
                     DisplayMetrics display_metrics = new DisplayMetrics();
                     getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
@@ -787,13 +753,9 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
                     InputStream input_stream = getContentResolver().openInputStream(uri_result);
                     profile_image_bitmap = image_saver.decode_image_from_input_stream(ProfileSettingsActivity.this, input_stream, uri_result, full_image_width, full_image_height);
-                   // encoded_bitmap_full = image_saver.encoded_bitmap(profile_image_bitmap, QUALITY);
-                   // encoded_bitmap_thumbnail = image_saver.encoded_bitmap(image_saver.scale_bitmap(profile_image_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY);
+
                     UserSettings.set_encoded_bitmap_thumbnail(getApplicationContext(), image_saver.encoded_bitmap(image_saver.scale_bitmap(profile_image_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY));
                     UserSettings.set_encoded_bitmap_full(getApplicationContext(), image_saver.encoded_bitmap(profile_image_bitmap, QUALITY));
-
-                    //profile_name_thumbnail = uid + "_thumbnail" + ".jpg";
-                    //profile_name_full = uid + "_full" + ".jpg";
 
                 } catch (IOException error) {
                     error.printStackTrace();
@@ -801,7 +763,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             }
             else {
                 Toast.makeText(ProfileSettingsActivity.this, "Image NOT retrieved", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "[ProfileSettingsActivity] Could not retrieve image");
+
                 //noinspection UnnecessaryReturnStatement
                 return;
             }
@@ -818,7 +780,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(ProfileSettingsActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(ProfileSettingsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-            // Launch Camera
             launch_camera();
         }
         else {
@@ -1028,8 +989,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "ProfileSettingsActivity onStart");
+
     }
 
     @Override
@@ -1095,25 +1055,23 @@ public class ProfileSettingsActivity extends AppCompatActivity {
             progress_bar.setVisibility(View.GONE);
         }
 
-        Log.d(TAG, "ProfileSettingsActivity onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "ProfileSettingsActivity onPause");
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "ProfileSettingsActivity onStop");
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "ProfileSettingsActivity onDestroy");
 
     }
 
@@ -1122,7 +1080,6 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         super.onSaveInstanceState(out_state);
 
         has_returned = true;
-        Log.d(TAG, "ProfileSettingsActivity onSaveInstanceState");
         profile_settings_activity_view_model.set_bitmap_live_data(profile_image_bitmap); // 6
   out_state.putString(getResources().getString(R.string.profile_image_thumbnail_url_key), profile_image_thumbnail_url); // 11
         out_state.putBoolean(getResources().getString(R.string.is_beginner_key), is_beginner); // 12
