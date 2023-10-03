@@ -118,10 +118,6 @@ public class RecipientInventoryActivity extends AppCompatActivity {
                     @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
 
-                Log.d(TAG, "UsersRecycleViewAdapter RESOURCE IS NOT NULL");
-
-
-
                 Bitmap source_bitmap = drawable_to_bitmap(resource);
                 RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(getResources(), source_bitmap);
                 circular_bitmap_drawable.setCircular(true);
@@ -163,7 +159,6 @@ public class RecipientInventoryActivity extends AppCompatActivity {
         //inventory_fragment_view_model.initialize(getApplication());
 
         if(savedInstanceState == null){
-            Log.d(TAG, "First Launch");
 
             JSONObject json_recipient_inventory = new JSONObject();
             try {
@@ -184,26 +179,19 @@ public class RecipientInventoryActivity extends AppCompatActivity {
             String access_token = UserSettings.get_user_token(RecipientInventoryActivity.this);
 
             String url = URL.INVENTORY_URL + "?" + "category=" + category + "&" + "ops=" + ops + "&" + "id=" + id + "&" + "access_token=" + access_token;
-            Log.d(TAG, "[RecipientInventoryActivity] URL: " + url);
             Volley volley = new Volley(getApplicationContext(), Request.Method.GET, url);
             volley.set_priority(Request.Priority.HIGH);
             volley.Execute(new VolleyStringCallback() {
                 @Override
                 public void network_response(String json_response) {
-
-                    Log.d(TAG, "RecipientInventoryFragment Response: " + json_response);
+                    
                     try {
-
-
-                        Log.d(TAG, "RecipientInventoryFragment:");
 
                         Object json_object_analyzer = new JSONTokener(json_response).nextValue();
                         if(json_object_analyzer instanceof JSONObject){
-                            Log.d(TAG, "[RecipientInventoryFragment] JSON Object");
 
                             JSONObject json_object = new JSONObject(json_response);
                             if(json_object.has(getResources().getString(R.string.session_timeout_label))){
-                                Log.d(TAG, "[RecipientInventoryFragment] Session Timeout");
                                 session_timeout(RecipientInventoryActivity.this);
                                 return;
                             }
@@ -294,12 +282,6 @@ public class RecipientInventoryActivity extends AppCompatActivity {
 
                         recipient_games_quantity_textView.setText(String.valueOf(recipient_library.size()));
 
-                        for(int i = 0; i < recipient_library.size(); i++){
-
-                            Log.d(TAG, "[RecipientActivity] " + (i + 1 ) + " " + recipient_library.get(i).title + " by " + recipient_library.get(i).game_developer);
-
-                        }
-
                         software_adapter = new SoftwareAdapter(RecipientInventoryActivity.this, recipient_library);
                         software_adapter.set_fragment_manager(fragment_manager);
                         software_adapter.set_is_recipient_inventory(true);
@@ -335,47 +317,25 @@ public class RecipientInventoryActivity extends AppCompatActivity {
 
         }
 
-
-        /*
-        recipient_inventory_recycler_view.setOnItemClickListener((parent, view, position, id) -> {
-
-            Log.d(TAG, "RecipientInventoryFragment Grid View: " + position);
-            Software software = (Software) parent.getItemAtPosition(position);
-
-            Bundle software_bundle = new Bundle();
-            software_bundle.putParcelable("software", software);
-            FragmentManager fragment_manager = getSupportFragmentManager();
-
-            RecipientSoftwareProfileDialog recipient_software_profile_dialog = new RecipientSoftwareProfileDialog();
-            recipient_software_profile_dialog.setArguments(software_bundle);
-            recipient_software_profile_dialog.show(fragment_manager, "Recipient_Software_Profile_Dialog");
-
-        });
-*/
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "RecipientInventoryActivity onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "RecipientInventoryActivity onResume");
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
 
-        Log.d(TAG, "RecipientInventoryFragment onSaveInstanceState");
         out_state.putParcelableArrayList("recipient_library", this.recipient_library);
         out_state.putParcelable("user", user);
-       // out_state.putParcelable("transaction_request", transaction_request);
-
-
+    
     }
 
     @Override
@@ -458,8 +418,7 @@ public class RecipientInventoryActivity extends AppCompatActivity {
                     if (json_response.has(context.getResources().getString(R.string.logout_100_label))) {
 
                         if (json_response.getBoolean(context.getResources().getString(R.string.logout_100_label))) {
-
-                            Log.d(TAG, "Logging out...");
+                            
                             launch_logout_activity(app, context);
 
                         }
@@ -500,19 +459,17 @@ public class RecipientInventoryActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "RecipientInventoryActivity onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "RecipientInventoryActivity onStop");
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "RecipientInventoryActivity onDestroy");
         software_adapter = null;
         recipient_inventory_recycler_view.setAdapter(null);
     }
