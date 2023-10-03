@@ -152,11 +152,8 @@ public class RecipientInventoryActivity extends AppCompatActivity {
       progress_bar.setVisibility(View.VISIBLE);
 
       fragment_manager = getSupportFragmentManager();
-
-
-      //  InventoryFragmentViewModel inventory_fragment_view_model = ViewModelProviders.of(this).get(InventoryFragmentViewModel.class);
+        
         @SuppressWarnings("unused") InventoryFragmentViewModel inventory_fragment_view_model = new ViewModelProvider(this).get(InventoryFragmentViewModel.class);
-        //inventory_fragment_view_model.initialize(getApplication());
 
         if(savedInstanceState == null){
 
