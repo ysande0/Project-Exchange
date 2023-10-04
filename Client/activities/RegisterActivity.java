@@ -38,9 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        Log.d(TAG, "Register Activity onCreate");
-      //  RegisterActivityViewModel register_activity_view_model = ViewModelProviders.of(this).get(RegisterActivityViewModel.class);
+        
         RegisterActivityViewModel register_activity_view_model = new ViewModelProvider(this).get(RegisterActivityViewModel.class);
         FirebaseAuth firebase_auth = FirebaseAuth.getInstance();
 
@@ -106,7 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
             else {
 
                 register_progress_bar.setVisibility(View.VISIBLE);
-              //  register_activity_view_model.account_creation( email_address, password, first_name, last_name);
             }
 
         });
