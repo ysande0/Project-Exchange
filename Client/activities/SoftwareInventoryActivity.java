@@ -79,14 +79,11 @@ public class SoftwareInventoryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "SoftwareInventoryActivity onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.d(TAG, "SoftwareInventoryActivity onResume");
 
     }
 
@@ -120,15 +117,11 @@ public class SoftwareInventoryActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        Log.d(TAG, "SoftwareInventoryActivity onPause");
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Log.d(TAG, "SoftwareInventoryActivity onDestroy");
 
     }
 
