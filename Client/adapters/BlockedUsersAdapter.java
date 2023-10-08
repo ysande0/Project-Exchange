@@ -163,8 +163,7 @@ public class BlockedUsersAdapter extends  RecyclerView.Adapter<BlockedUsersAdapt
     @NonNull
     @Override
     public BlockedUsersViewHolder onCreateViewHolder(@NonNull ViewGroup view_group, int viewType) {
-
-        Log.d(TAG, "[BlockedUsersAdapter] onCreateViewHolder");
+        
         View view = LayoutInflater.from(view_group.getContext()).inflate(R.layout.dialog_blocked_users_items, view_group, false);
 
         return new BlockedUsersViewHolder(view);
@@ -172,8 +171,6 @@ public class BlockedUsersAdapter extends  RecyclerView.Adapter<BlockedUsersAdapt
 
     @Override
     public void onBindViewHolder(@NonNull BlockedUsersViewHolder blocked_users_view_holder, int position) {
-
-        Log.d(TAG, "[BlockedUsersAdapter] onBindViewHolder");
 
         Users user = blocked_users.get(position);
         Glide.with(this.context_weak_reference.get()).clear(blocked_users_view_holder.blocked_user_profile_image_view);
@@ -186,8 +183,6 @@ public class BlockedUsersAdapter extends  RecyclerView.Adapter<BlockedUsersAdapt
                .into(new CustomTarget<Drawable>() {
                    @Override
                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                       Log.d(TAG, "[BlockedUsersAdapter] RESOURCE IS NOT NULL");
                        Bitmap source_bitmap = drawable_to_bitmap(resource);
                        RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(context_weak_reference.get().getResources(), source_bitmap);
                        circular_bitmap_drawable.setCircular(true);
