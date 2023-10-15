@@ -125,9 +125,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
                         public void onLoadStarted(@Nullable Drawable placeholder) {
                             super.onLoadStarted(placeholder);
 
-                            //  Bitmap place_holder_bitmap = drawable_to_bitmap(ResourcesCompat.getDrawable(context.getResources(), R.drawable.default_profile_image, null));
-                            //  conversation_view_holder.profile_image.setImageBitmap(place_holder_bitmap);
-
                         }
 
                         @Override
