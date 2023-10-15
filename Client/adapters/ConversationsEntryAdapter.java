@@ -87,24 +87,14 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
 
         ConversationViewHolder conversation_view_holder = new ConversationViewHolder(view);
 
-        final String MSG = "TAG";
-        Log.d(MSG, "[ConversationAdapter] onCreateViewHolder");
-
         return conversation_view_holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ConversationViewHolder conversation_view_holder, int position) {
 
-        final String MSG = "TAG";
-        Log.d(MSG, "[ConversationAdapter] onBindViewHolder");
         Message recent_message = messages_conversation_entries.get(position);
-
-        Log.d(TAG, "onBindViewHolder: Position - (" + position + ")" + " | message: " + recent_message.message);
         ConversationEntry current_conversation_entry = new ConversationEntry();
-
-
-        Log.d(TAG, "Recent Conversation ID: " + recent_message.conversation_id);
 
         current_conversation_entry.conversation_id = recent_message.conversation_id;
         current_conversation_entry.recipient_user.id = recent_message.recipient_user_id;
@@ -125,8 +115,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
         conversation_view_holder.set_conversation_dao(my_conversations_dao);
         conversation_view_holder.set_user(user);
 
-
-            Log.d(TAG, "[ConversationsEntryAdapter] Profile image thumbnail is NOT NONE: " + recent_message.recipient_profile_image_thumbnail_url);
             glide_request_manager.asDrawable()
                     .load(recent_message.recipient_profile_image_thumbnail_url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -144,8 +132,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
 
                         @Override
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                            Log.d(TAG, "[ConversationsEntryAdapter] RESOURCE IS NOT NULL");
                             Bitmap source_bitmap = drawable_to_bitmap(resource);
 
                             RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(context.getResources(), source_bitmap);
@@ -162,7 +148,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
 
         if(!recent_message.is_read){
 
-            Log.d(MSG, "[ConversationsEntryAdapter] UNREAD MESSAGES");
             conversation_view_holder.first_name.setText(recent_message.recipient_first_name);
             conversation_view_holder.recent_entry_message.setText(recent_message.message.trim());
             conversation_view_holder.recent_entry_message.setTypeface(Typeface.DEFAULT_BOLD);
@@ -171,8 +156,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
             conversation_view_holder.unread_message_badge.setVisibility(View.VISIBLE);
             return;
         }
-        else
-            Log.d(MSG, "[ConversationsEntryAdapter] READ MESSAGES");
 
 
         conversation_view_holder.first_name.setText(recent_message.recipient_first_name);
@@ -183,24 +166,16 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
         conversation_view_holder.date.setText(recent_message.date);
         conversation_view_holder.unread_message_badge.setVisibility(View.GONE);
 
-        Log.d(TAG, "RecycleView Position Item Selected: " + position);
-
     }
 
     public void update_unread_message_badge(int position){
 
-       // messages_conversation_entries.get(position).set_visibility(visibility);
-        final String MSG = "TAG";
-        Log.d(MSG, "[ConversationAdapter] updating (unread message) Conversation Fragment UI");
         messages_conversation_entries.get(position).is_read = false;
         notifyItemChanged(position);
     }
 
     public void update_read_message(int position){
 
-
-        final String MSG = "TAG";
-        Log.d(MSG, "[ConversationAdapter] updating (read message) Conversation Fragment UI");
         messages_conversation_entries.get(position).is_read = true;
         notifyItemChanged(position);
     }
@@ -237,7 +212,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
             MyConversationsTask my_conversation_task = new MyConversationsTask(recent_message_entry.conversation_id, my_conversations_dao, DatabaseOperations.DELETE);
             my_conversation_task.execute();
             messages_conversation_entries.remove(view_holder.getAdapterPosition());
-            // database delete
 
             if(messages_conversation_entries.isEmpty()){
 
@@ -267,8 +241,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
             int top = view_holder.itemView.getTop() + (view_holder.itemView.getHeight() - delete_conversation_icon.getIntrinsicHeight()) / 2;
             int bottom = top + delete_conversation_icon.getIntrinsicHeight();
 
-
-                Log.d(TAG, "DELETE ICON IS NOT NULL   Top: " + top + "    Bottom: " + bottom );
                 delete_conversation_icon.setBounds(left, top, right, bottom);
                 delete_conversation_icon.draw(canvas);
 
@@ -347,9 +319,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
         @Override
         public void onClick(View v) {
 
-
-            Log.d(TAG, "[ConversationsEntryAdapter] Clicked Conversation ID: " + this.conversation_entry.conversation_id);
-
             int position = getAdapterPosition();
 
             Message message_entry = messages_conversation_entries.get(position);
@@ -358,7 +327,6 @@ public class ConversationsEntryAdapter extends RecyclerView.Adapter<Conversation
             messages_conversation_entries.set(position, message_entry);
             notifyItemChanged(position);
 
-            //Toast.makeText(this.context, "Conversation ID: " + this.conversation_entry.conversation_id, Toast.LENGTH_LONG).show();
             LoadConversationTask load_conversation = new LoadConversationTask(this.context, my_conversations_dao);
             load_conversation.set_interface(UserInterface.HOME_USER_SOFTWARE_PROFILE_ACTIVITY);
             load_conversation.set_conversation_entry(this.conversation_entry);
