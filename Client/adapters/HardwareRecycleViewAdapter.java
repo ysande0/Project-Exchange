@@ -55,18 +55,7 @@ public class HardwareRecycleViewAdapter extends RecyclerView.Adapter<HardwareRec
     public HardwareRecycleViewAdapter(Context context, ArrayList<Hardware> hardwares, MyHardwareDao my_hardware_dao, RecyclerView hardware_platform_recycle_view){
 
         this.hardwares = hardwares;
-        /*
-                                if(user_platforms.contains(context.getResources().getString(R.string.no_hardware_available_label))){
-
-                                    user_platforms.remove(context.getResources().getString(R.string.no_hardware_available_label));
-                                    user_platforms.add(hardware.platform);
-                                    adapter.notifyDataSetChanged();
-                                }
-
-                                user_platforms.add(hardware.platform);
-                                adapter.notifyDataSetChanged();
-                                Log.d(TAG, hardware.platform + " has been deleted");
-*/
+        
         ItemTouchHelper.SimpleCallback item_touch_helper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -106,7 +95,6 @@ public class HardwareRecycleViewAdapter extends RecyclerView.Adapter<HardwareRec
 
                         progress_bar.setVisibility(View.GONE);
                         add_hardware_platform_button.setEnabled(true);
-                        Log.d(TAG, "[HardwareRecycleViewAdapter] onSwipe network response");
                         if (json_response.has("transaction_hardware_100_2")) {
 
 
@@ -125,18 +113,7 @@ public class HardwareRecycleViewAdapter extends RecyclerView.Adapter<HardwareRec
                                     MyHardware my_hardware = new MyHardware(hardware.manufacturer, hardware.platform);
                                     MyHardwareTask my_hardware_task = new MyHardwareTask(my_hardware, my_hardware_dao, DatabaseOperations.DELETE);
                                     my_hardware_task.execute();
-/*
-                                if(user_platforms.contains(context.getResources().getString(R.string.no_hardware_available_label))){
 
-                                    user_platforms.remove(context.getResources().getString(R.string.no_hardware_available_label));
-                                    user_platforms.add(hardware.platform);
-                                    adapter.notifyDataSetChanged();
-                                }
-
-                                user_platforms.add(hardware.platform);
-                                adapter.notifyDataSetChanged();
-                                Log.d(TAG, hardware.platform + " has been deleted");
-*/
                                     if (getItemCount() == 0) {
 
                                         no_hardware_available_textView_id.setVisibility(View.VISIBLE);
@@ -184,7 +161,7 @@ public class HardwareRecycleViewAdapter extends RecyclerView.Adapter<HardwareRec
                                 Toast.makeText(context,
                                         "network connective issue",
                                         Toast.LENGTH_LONG).show();
-                               // launch_logout_activity();
+                
                             }
                         }
 
@@ -212,14 +189,11 @@ public class HardwareRecycleViewAdapter extends RecyclerView.Adapter<HardwareRec
                 int top = view_holder.itemView.getTop() + (view_holder.itemView.getHeight() - delete_hardware_icon.getIntrinsicHeight()) / 2;
                 int bottom = top + delete_hardware_icon.getIntrinsicHeight();
 
-
-                Log.d(TAG, "DELETE ICON IS NOT NULL   Top: " + top + "    Bottom: " + bottom );
                 delete_hardware_icon.setBounds(left, top, right, bottom);
                 delete_hardware_icon.draw(canvas);
 
                 Bundle bundle = new Bundle();
 
-                // Most likely newly registered
                 if((UserSettings.get_latitude(context).isEmpty() || UserSettings.get_longitude(context).isEmpty()) || (UserSettings.get_latitude(context) == null || UserSettings.get_longitude(context) == null))
                     return;
 
