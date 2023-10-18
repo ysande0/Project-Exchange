@@ -64,13 +64,11 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
     private final ConversationEntry conversation_entry;
 
     public MessageRecycleViewAdapter(Context context, ArrayList<Message> messages_list, ConversationEntry conversation_entry){
-
-   //     Log.d(TAG, "MessageRecycleViewAdapter: ");
-   //     Log.d(TAG, "Size of Messages: " + messages_list.size() + "  UID: " + device_owner_uid);
+            
        this.context = context;
        this.messages_list = messages_list;
        this.conversation_entry = conversation_entry;
-       Log.d(TAG, "[MessageRecycleViewAdapter  Constructor] first name: " + this.conversation_entry.current_user.first_name + "  id: " + this.conversation_entry.current_user.id);
+     
 
     }
 
@@ -110,18 +108,15 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-
-        //  Log.d(TAG, "MessageRecycleViewAdapter: getItemViewType called");
+            
         Message message = messages_list.get(position);
         //noinspection SpellCheckingInspection
-        Log.d(TAG, "MRVA: " + message.is_from_server);
-        if(!message.is_from_server) {
 
-            Log.d(TAG, "--> Sender MESSAGE MODE <---");
+        if(!message.is_from_server) {
             return MESSAGE_TYPE_ONE;
         }
         else {
-            Log.d(TAG, "--> Recipient MESSAGE MODE <---");
+
             return MESSAGE_TYPE_TWO;
         }
     }
@@ -143,15 +138,14 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup view_group, int view_type) {
-
-     //   Log.d(TAG, "MessageActivity: onCreateViewHolder");
+            
         if(view_type == EMPTY_ITEM) {
             View view = LayoutInflater.from(view_group.getContext()).inflate(R.layout.activity_message_zero_items, view_group, false);
             return new MessageEmptyViewHolder(view);
         }
 
         if(view_type == MESSAGE_TYPE_ONE){
-           Log.d(TAG, "onCreateViewHolder: Sender [Message]");
+
             View view = LayoutInflater.from(view_group.getContext()).inflate(R.layout.activity_message_sender_items, view_group, false);
             return new MessageSenderViewHolder(view);
         }
@@ -168,8 +162,7 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder view_holder, int position) {
-
-       // Log.d(TAG, "MessageActivity: onBindViewHolder");
+            
         switch(view_holder.getItemViewType()){
 
             case MESSAGE_TYPE_ONE:
@@ -189,9 +182,6 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void sender_layout(MessageSenderViewHolder sender_view_holder, int position){
 
-           // Log.d(TAG, "MessageRecycleViewAdapter: [Sender] ");
-        Log.d(TAG, "[MessageRecycleViewAdapter] SENDER PROFILE_IMAGE: " + this.messages_list.get(position).profile_image_thumbnail_url);
-
         Message message = this.messages_list.get(position);
 
             Glide.with(this.context).asDrawable()
@@ -204,50 +194,39 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
                         public void onLoadStarted(@Nullable Drawable placeholder) {
                             super.onLoadStarted(placeholder);
 
-                            //   Bitmap place_holder_bitmap = drawable_to_bitmap(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_default_profile_image_teal, null));
-                            //    sender_view_holder.sender_profile_imageView.setImageBitmap(place_holder_bitmap);
-
                         }
 
                         @Override
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
 
-                            Log.d(TAG, "[MessageRecycleViewAdapter] RESOURCE IS NOT NULL");
-
                             if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.ldpi_label))){
 
-                                Log.d(TAG, " Client device is ldpi");
                                 WANTED_WIDTH = 30;
                                 WANTED_HEIGHT = 30;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.mdpi_label))){
 
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is mdpi");
                                 WANTED_WIDTH = 40;
                                 WANTED_HEIGHT = 40;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.hdpi_label))){
-
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is hdpi");
+                                    
                                 WANTED_WIDTH = 60;
                                 WANTED_HEIGHT = 60;
 
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xhdpi_label))){
-
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xhdpi");
+                                    
                                 WANTED_WIDTH = 80;
                                 WANTED_HEIGHT = 80;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xxhdpi_label))){
-
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xxhdpi");
+                                    
                                 WANTED_WIDTH = 120;
                                 WANTED_HEIGHT = 120;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xxxhdpi_label))){
-
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xxxhdpi");
+                                    
                                 WANTED_WIDTH = 160;
                                 WANTED_HEIGHT = 160;
 
@@ -256,9 +235,9 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
                             ImageSaver image_saver = new ImageSaver();
                             Bitmap bitmap = drawable_to_bitmap(resource);
                             new Thread(() -> {
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Sender Before Image Width: " + bitmap.getWidth() + "  Height: " + bitmap.getHeight() + " memory size: " +  bitmap.getAllocationByteCount());
+                             
                                 Bitmap source_bitmap = image_saver.decode_image_from_encode(image_saver.encoded_bitmap(bitmap, 100), WANTED_WIDTH, WANTED_HEIGHT);
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Sender After Image Width: " + source_bitmap.getWidth() + "  Height: " + source_bitmap.getHeight() + " memory size: " +  source_bitmap.getAllocationByteCount());
+                               
                                 RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(context.getResources(), source_bitmap);
                                 circular_bitmap_drawable.setCircular(true);
 
@@ -286,10 +265,7 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
                         }
                     });
-       // sender_view_holder.sender_profile_imageView.setBackground(context.getResources().getDrawable(R.drawable.image_view_circular));
 
-            Log.d(TAG, "[MessageRecycleViewAdapter] SENDER FIRST: " + messages_list.get(position).first_name);
-        //    sender_view_holder.sender_first_name_textView.setText(messages_list.get(position).first_name);
             sender_view_holder.sender_message_textView.setText(message.message);
             sender_view_holder.sender_message_textView.setBackground(context.getResources().getDrawable(R.drawable.sender_message_bubble));
             sender_view_holder.sender_time_textView.setText(message.time);
@@ -297,7 +273,6 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         if(message.message_delivered == MESSAGE_ERROR){
 
-            Log.d(TAG, "[FCM] Message Received ERROR");
             sender_view_holder.sender_message_received_imageView.setVisibility(View.GONE);
             sender_view_holder.sender_message_error_imageView.setVisibility(View.VISIBLE);
 
@@ -309,7 +284,6 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
         else if(message.message_delivered == MESSAGE_RECEIVED){
 
-            Log.d(TAG, "[FCM] Message Received CHECK");
             sender_view_holder.sender_message_received_imageView.setVisibility(View.VISIBLE);
             sender_view_holder.sender_message_error_imageView.setVisibility(View.GONE);
 
@@ -326,14 +300,7 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void recipient_layout(MessageRecipientViewHolder recipient_view_holder, int position){
 
-           // Log.d(TAG, "MessageRecycleViewAdapter: [Recipient]");
-        Log.d(TAG, "[MessageRecycleViewAdapter] RECIPIENT PROFILE_IMAGE: " + this.conversation_entry.recipient_user.user_image_thumbnail_url);
-
         Message message = this.messages_list.get(position);
-
-       // Glide.with(context.getApplicationContext()).clear(recipient_view_holder.recipient_profile_imageView);
-       // recipient_view_holder.recipient_profile_imageView.setImageResource(android.R.color.transparent);
-
          Glide.with(context).asDrawable()
                     .load(message.profile_image_thumbnail_url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -344,63 +311,52 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
                         public void onLoadStarted(@Nullable Drawable placeholder) {
                             super.onLoadStarted(placeholder);
 
-                            //  Bitmap place_holder_bitmap = drawable_to_bitmap(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_default_profile_image_teal, null));
-                            //  recipient_view_holder.recipient_profile_imageView.setImageBitmap(place_holder_bitmap);
-
                         }
 
                         @Override
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
 
-                            Log.d(TAG, "[MessageRecycleViewAdapter] RESOURCE IS NOT NULL");
-
                             if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.ldpi_label))){
 
-                                Log.d(TAG, " Client device is ldpi");
+                      
                                 WANTED_WIDTH = 30;
                                 WANTED_HEIGHT = 30;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.mdpi_label))){
 
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is mdpi");
+                
                                 WANTED_WIDTH = 40;
                                 WANTED_HEIGHT = 40;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.hdpi_label))){
-
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is hdpi");
+                                    
                                 WANTED_WIDTH = 60;
                                 WANTED_HEIGHT = 60;
 
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xhdpi_label))){
 
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xhdpi");
                                 WANTED_WIDTH = 80;
                                 WANTED_HEIGHT = 80;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xxhdpi_label))){
 
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xxhdpi");
                                 WANTED_WIDTH = 120;
                                 WANTED_HEIGHT = 120;
                             }
                             else if(UserSettings.get_user_dpi(context).equals(context.getString(R.string.xxxhdpi_label))){
 
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Client device is xxxhdpi");
                                 WANTED_WIDTH = 160;
                                 WANTED_HEIGHT = 160;
 
                             }
 
-                            //Bitmap source_bitmap = scale_bitmap(drawable_to_bitmap(resource), WANTED_WIDTH, WANTED_HEIGHT);
                             ImageSaver image_saver = new ImageSaver();
                             Bitmap bitmap = drawable_to_bitmap(resource);
 
                             new Thread(() -> {
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Recipient Before Image Width: " + bitmap.getWidth() + "  Height: " + bitmap.getHeight() + " memory size: " +  bitmap.getAllocationByteCount());
+                        
                                 Bitmap source_bitmap = image_saver.decode_image_from_encode(image_saver.encoded_bitmap(bitmap, 100), WANTED_WIDTH, WANTED_HEIGHT);
-                                Log.d(TAG, "[MessageRecycleViewAdapter] Recipient After Image Width: " + source_bitmap.getWidth() + "  Height: " + source_bitmap.getHeight() + " memory size: " +  source_bitmap.getAllocationByteCount());
                                 RoundedBitmapDrawable circular_bitmap_drawable = RoundedBitmapDrawableFactory.create(context.getResources(), source_bitmap);
                                 circular_bitmap_drawable.setCircular(true);
 
@@ -429,13 +385,6 @@ public class MessageRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView
                         }
                     });
 
-         //   recipient_view_holder.recipient_profile_imageView.setBackground(context.getResources().getDrawable(R.drawable.image_view_circular));
-
-            Log.d(TAG, "[MessageRecycleViewAdapter] RECIPIENT FIRST: " + messages_list.get(position).first_name);
-        //Bitmap software_bitmap = ((BitmapDrawable)recipient_view_holder.recipient_profile_imageView.getDrawable()).getBitmap();
-
-
-            // recipient_view_holder.recipient_first_name_textView.setText(messages_list.get(position).first_name);
             recipient_view_holder.recipient_message_textView.setText(messages_list.get(position).message);
             recipient_view_holder.recipient_message_textView.setBackground(context.getResources().getDrawable(R.drawable.recipient_message_bubble));
             recipient_view_holder.recipient_time_textView.setText(messages_list.get(position).time);
