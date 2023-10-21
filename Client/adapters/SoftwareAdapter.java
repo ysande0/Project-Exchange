@@ -36,16 +36,13 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
 
     private static final String TAG = "MSG";
 
-    //private final Context context;
     private final WeakReference<Context> context_weak_reference;
     private ArrayList<Software> software;
-   // private FragmentManager fragment_manager;
     private WeakReference<FragmentManager> fragment_manager_weak_reference;
     private boolean is_recipient_inventory = false;
 
     public SoftwareAdapter(Context context, ArrayList<Software> software){
 
-        //this.context = context;
         this.context_weak_reference = new WeakReference<>(context);
         this.software = software;
 
@@ -63,18 +60,14 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
 
          View view = LayoutInflater.from(view_group.getContext()).inflate(R.layout.fragment_inventory_grid_subviews, view_group, false);
 
-         Log.d(TAG, "[SoftwareAdapter] onCreateViewHolder");
-
         return new SoftwareViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SoftwareViewHolder software_view_holder, int position) {
 
-        Log.d(TAG, "[SoftwareAdapter] onBindViewHolder");
         Software software_item = this.software.get(position);
 
-        String platform = "N/A";
         if(software_item.platform.equals(this.context_weak_reference.get().getApplicationContext().getResources().getString(R.string.playstation_four_platform)))
             platform = this.context_weak_reference.get().getApplicationContext().getResources().getString(R.string.playstation_four_abbr);
         else if(software_item.platform.equals(this.context_weak_reference.get().getApplicationContext().getResources().getString(R.string.playstation_five_platform)))
@@ -111,14 +104,7 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
 
-                        Log.d(TAG, "SoftwareAdapter RESOURCE IS NOT NULL");
-
-
                         Bitmap source_bitmap = drawable_to_bitmap(resource);
-                        if(source_bitmap == null)
-                            Log.d(TAG, "Source Bitmap is null for " + software_item.software_image_thumbnail_url);
-                        else
-                            Log.d(TAG, "Source Bitmap is not null for " + software_item.software_image_thumbnail_url);
 
                         software.get(position).software_bitmap = source_bitmap;
                         software_view_holder.software_imageView.setImageBitmap(source_bitmap);
@@ -144,7 +130,6 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
 
     public void set_fragment_manager(FragmentManager fragment_manager){
 
-      //  this.fragment_manager = fragment_manager;
         this.fragment_manager_weak_reference = new WeakReference<>(fragment_manager);
     }
 
@@ -186,22 +171,18 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
         if(this.software.contains(software_item)){
 
             this.software.remove(software_item);
-            Log.d(TAG, "[SoftwareAdapter] Item " + software_item.title + "  by " + software_item.game_developer + " deleted");
             return;
         }
 
-        Log.d(TAG, "[SoftwareAdapter] Could not delete: " + software_item.title);
     }
 
     public void update(Software software_item, int position){
 
             this.software.set(position, software_item);
-            Log.d(TAG, "[SoftwareAdapter] Item " + software_item.title + "  by " + software_item.game_developer + " updated");
 
     }
 
     public static class SoftwareViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
 
         private Software software;
         private final ImageView software_imageView;
@@ -209,7 +190,6 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
         private final TextView software_platformView;
         private int position;
         private boolean is_recipient_inventory;
-       // private FragmentManager fragment_manager;
        private WeakReference<FragmentManager> fragment_manager_weak_reference;
 
         SoftwareViewHolder(View item_by_id){
@@ -234,8 +214,7 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
         }
 
         void set_fragment_manager(FragmentManager fragment_manager){
-
-           // this.fragment_manager = fragment_manager;
+            
             this.fragment_manager_weak_reference = new WeakReference<>(fragment_manager);
         }
 
@@ -248,16 +227,13 @@ public class SoftwareAdapter extends RecyclerView.Adapter<SoftwareAdapter.Softwa
             software_bundle.putParcelable("software", software);
             software_bundle.putInt("position", position);
 
-
             if(!this.is_recipient_inventory) {
-                Log.d(TAG, "[Software Adapter] User Inventory");
 
                 SoftwareProfileDialog software_profile_dialog = new SoftwareProfileDialog();
                 software_profile_dialog.setArguments(software_bundle);
                 software_profile_dialog.show(fragment_manager_weak_reference.get(), "Software_Profile_Dialog");
             }
             else {
-                Log.d(TAG, "[Software Adapter] Recipient Inventory");
                 RecipientSoftwareProfileDialog recipient_software_profile_dialog = new RecipientSoftwareProfileDialog();
                 recipient_software_profile_dialog.setArguments(software_bundle);
                 recipient_software_profile_dialog.show(fragment_manager_weak_reference.get(), "Recipient_Software_Profile_Dialog");
