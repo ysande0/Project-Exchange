@@ -45,8 +45,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final Context context;
     private final RequestManager glide_request_manager;
     private static final int ITEM_USER = 1;
-  //  private static final int ITEM_AD = 2;
-    // --Commented out by Inspection (1/9/2021 11:54 PM):private static final int ITEM_PER_AD = 4;
 
 
     public UsersRecycleViewAdapter(Context context, RequestManager glide_request_manager){
@@ -65,8 +63,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int view_type) {
 
-        Log.d(TAG, "onCreateViewHolder");
-
 
         //noinspection SwitchStatementWithTooFewBranches
         switch(view_type){
@@ -74,15 +70,8 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             case ITEM_USER:
                 View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_home_items, viewGroup, false);
                 return new UsersViewHolder(view);
-/*
-            case ITEM_AD:
-                View banner_view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_home_banner_ad_item, viewGroup, false);
-                return new BannerAdViewHolder(banner_view);
-
- */
         }
-
-        //noinspection ConstantConditions
+        
         return null;
     }
 
@@ -97,8 +86,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder view_holder, int position) {
-
-        Log.d(TAG, "onBindViewHolder");
 
         int view_type = getItemViewType(position);
 
@@ -123,13 +110,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public int getItemViewType(int position) {
 
-        /*
-        if(position == 0)
-            return ITEM_AD;
-        else
-            return ITEM_USER;
-
-         */
         return ITEM_USER;
     }
 
@@ -140,7 +120,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             return;
 
         Users user = (Users) users_list.get(position);
-        // Cache the images
 
 
         glide_request_manager.asDrawable()
@@ -158,8 +137,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                     @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                Log.d(TAG, "UsersRecycleViewAdapter RESOURCE IS NOT NULL");
 
                 Bitmap source_bitmap = drawable_to_bitmap(resource);
                         Bitmap round_bitmap  = Bitmap.createBitmap(source_bitmap.getWidth(), source_bitmap.getHeight(), source_bitmap.getConfig());
@@ -217,7 +194,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     static class UsersViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ImageView user_software_imageView;
-      //  private ImageView user_picture_imageView;
         private final TextView first_name_TextView;
         private final TextView title_textView;
         private final TextView platform_textView;
@@ -231,7 +207,6 @@ public class UsersRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(item_by_id);
             item_by_id.setOnClickListener(this);
             this.user_software_imageView = item_by_id.findViewById(R.id.home_user_software_id);
-            //this.user_picture_imageView = item_by_id.findViewById(R.id.home_user_picture_id);
             this.first_name_TextView = item_by_id.findViewById(R.id.home_first_name_textView_id);
             this.title_textView = item_by_id.findViewById(R.id.home_title_textView_id);
             this.platform_textView = item_by_id.findViewById(R.id.home_platform_textView_id);
