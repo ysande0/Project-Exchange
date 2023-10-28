@@ -90,7 +90,6 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
 
         if(database_operations == DatabaseOperations.INSERT){
 
-            Log.d(TAG, "HomeTask INSERT");
             List<Home> home_users = this.home_dao.query_users();
             if(home_users.isEmpty()){
 
@@ -102,44 +101,27 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
         }
         else if(database_operations == DatabaseOperations.UPDATE){
 
-            Log.d(TAG, "HomeTask UPDATE");
             this.home_dao.update(home);
 
         }
         else if(database_operations == DatabaseOperations.READ){
 
-             Log.d(TAG, "HomeTask READ");
              ArrayList<Users> users_data = new ArrayList<>();
 
             List<Home> home_users = this.home_dao.query_users();
 
             if(home_users.isEmpty()){
 
-                Log.d(TAG, "1) [HomeTask] No Users Available");
                 return users_data;
             }
 
             String users_response = home_users.get(0).get_home_response();
-/*
-            if(users_response.equals("NO_USERS")){
-
-                Log.d(TAG, "[HomeTask] No Users Available");
-                return users_data;
-            }
-
- */
 
             if(users_response == null){
-
-                Log.d(TAG, "[HomeTask] user_response is NULL");
-                Log.d(TAG, "2) [HomeTask] No Users Available");
                 return users_data;
             }
-
-            Log.d(TAG, "[HomeTask] user_response: " + users_response);
+            
             if( users_response.equals("[]")) {
-
-                Log.d(TAG, "3) [HomeTask] No Users Available");
                 return users_data;
             }
 
@@ -153,7 +135,6 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
                     user.id = json_array.getJSONObject(i).getString(context_weak_reference.get().getResources().getString(R.string.user_id_key));
                     Log.d(TAG, "HomeTask ID: " + user.id);
                     user.first_name = json_array.getJSONObject(i).getString(context_weak_reference.get().getResources().getString(R.string.first_name_key));
-                   // user.fcm_token = json_array.getJSONObject(i).getString("fcm_token");
 
                     if(UserSettings.get_user_dpi(this.context_weak_reference.get()).equals(this.context_weak_reference.get().getResources().getString(R.string.ldpi_label))){
 
@@ -240,10 +221,6 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
 
                     }
 
-                    Log.d(TAG, "[HomeTask] User Software Image Thumbnail URL: " + user.software.software_image_thumbnail_url);
-                    Log.d(TAG, "[HomeTask] User Software Full URL: " + user.software.software_image_full_url);
-
-
                     users_data.add(user);
 
                 }
@@ -253,11 +230,8 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
                 json_error.printStackTrace();
             }
 
-            Log.d(TAG, "[HomeTask] Users Available");
-
             return users_data;
         }
-
 
         return null;
     }
@@ -268,16 +242,13 @@ public class HomeTask extends AsyncTask<Home, Void, ArrayList<Users>> {
 
         if(users_data == null || users_data.isEmpty()){
 
-            Log.d(TAG, "No Home entries exiting...");
             this.users_data.setValue(users_data);
             return;
         }
 
         if(this.database_operations == DatabaseOperations.READ){
-
-            Log.d(TAG, "Generating objects...");
+            
             this.users_data.setValue(users_data);
-            Log.d(TAG, "HomeTask Finished loading users");
         }
 
     }
