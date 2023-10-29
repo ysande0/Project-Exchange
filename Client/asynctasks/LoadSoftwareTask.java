@@ -35,7 +35,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
 
 // --Commented out by Inspection START (1/9/2021 11:51 PM):
 //    @SuppressWarnings("FieldCanBeLocal")
-//    private final WeakReference<Context> context_weak_reference;
 // --Commented out by Inspection STOP (1/9/2021 11:51 PM)
     private final WeakReference<Context> context_weak_reference;
     private WeakReference<InventoryFragment> inventory_fragment_weak_reference;
@@ -43,7 +42,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
     private final WeakReference<RecyclerView> inventory_recycler_view_weak_reference;
     private final SoftwareAdapter software_adapter;
     private final MySoftwareDao my_software_dao;
-    //private InventoryFragmentViewModel inventory_fragment_view_model;
     private FragmentManager fragment_manager;
     private WeakReference<TextView> no_software_available_textView_weak_reference;
 
@@ -62,12 +60,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
         this.no_software_available_textView_weak_reference = new WeakReference<>(no_software_available_textView);
     }
 
-/*
-    public void set_inventory_management_view_model(InventoryFragmentViewModel inventory_fragment_view_model){
-
-       this.inventory_fragment_view_model = inventory_fragment_view_model;
-    }
-*/
    public void set_fragment(InventoryFragment inventory_fragment){
 
        inventory_fragment_weak_reference = new WeakReference<>(inventory_fragment);
@@ -93,10 +85,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
 
         for(int i = 0; i < my_software.size(); i++){
 
-            /*
-            if(my_software.isEmpty())
-                break;
-*/
             Software software = new Software();
             software.id = my_software.get(i).get_id();
             software.title = my_software.get(i).get_title();
@@ -146,8 +134,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
 
             }
 
-            Log.d(TAG, (i + 1) + ") " + software.software_image_full_url + "     " +  software.software_image_thumbnail_url);
-
             softwares.add(software);
 
 
@@ -160,56 +146,28 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
     protected void onPostExecute(ArrayList<Software> softwares) {
         super.onPostExecute(softwares);
 
-        Log.d(TAG, "[LoadSoftwareTask] onPostExecute");
-
         if ( context_weak_reference.get() instanceof HomeActivity) {
-            Log.d(TAG, "[LoadSoftwareTask] is HomeActivity instance");
 
             Activity activity = (Activity)context_weak_reference.get();
             if ( activity.isDestroyed() ) {
-                Log.d(TAG, "[LoadSoftwareTask] is destroyed");
                 return;
             }
-            else
-                Log.d(TAG, "[LoadSoftwareTask] is NOT destroyed");
-
         }
-        else
-            Log.d(TAG, "[LoadSoftwareTask] is NOT HomeActivity instance");
 
         if(softwares.isEmpty()) {
 
-            Log.d(TAG, "[LoadSoftwareTask] Library is Empty ");
             inventory_recycler_view_weak_reference.get().setVisibility(View.GONE);
             no_software_available_textView_weak_reference.get().setVisibility(View.VISIBLE);
             inventory_fragment_coordinatorlayout_weak_reference.get().setBackgroundColor(Color.GRAY);
-          //  Objects.requireNonNull(inventory_fragment_weak_reference.get().getView()).setBackgroundColor(Color.GRAY);
         }
-        else
-            Log.d(TAG, "[LoadSoftwareTask] Library is NOT Empty ");
 
         if(no_software_available_textView_weak_reference.get() == null || inventory_recycler_view_weak_reference.get() == null) {
-            Log.d(TAG, "[LoadSoftwareTask] no_software_available_textView_weak_reference is null or inventory_recycler_view_weak_reference is null");
             return;
         }
-        else{
-            Log.d(TAG, "[LoadSoftwareTask] no_software_available_textView_weak_reference is NOT null or inventory_recycler_view_weak_reference is NOT null");
-         //   no_software_available_textView_weak_reference.get().setVisibility(View.GONE);
-         //   inventory_recycler_view_weak_reference.get().setVisibility(View.VISIBLE);
-
-        }
-
-
-        for(int i = 0; i < softwares.size(); i++){
-
-            Log.d(TAG, "[LoadSoftwareTask] ID: " + softwares.get(i).id + " " + softwares.get(i).title + " by " + softwares.get(i).game_developer);
-        }
-
-       // software_adapter = new SoftwareAdapter(this.context_weak_reference.get(), softwares);
+        
         software_adapter.set_softwares(softwares);
         software_adapter.set_is_recipient_inventory(false);
         software_adapter.set_fragment_manager(fragment_manager);
-        //inventory_fragment_view_model.set_software_adapter(software_adapter);
         inventory_recycler_view_weak_reference.get().setAdapter(software_adapter);
 
         inventory_recycler_view_weak_reference.get().setItemAnimator(new DefaultItemAnimator());
@@ -219,7 +177,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
 
         fragment_manager.setFragmentResultListener("update_software", inventory_fragment_weak_reference.get(), (requestKey, result) -> {
 
-            Log.d(TAG, "[LoadSoftwareTask] Proceeding to update......");
             boolean update_item = result.getBoolean("update_item");
             int position = result.getInt("position");
             Software software_item = result.getParcelable("software");
@@ -227,14 +184,12 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
 
                 software_adapter.update(software_item, position);
                 software_adapter.notifyDataSetChanged();
-                Log.d(TAG, "SoftwareAdapter UPDATED");
             }
 
         });
 
         fragment_manager.setFragmentResultListener("delete_software", inventory_fragment_weak_reference.get(), (requestKey, result) -> {
 
-            Log.d(TAG, "[LoadSoftwareTask] Proceeding to delete......");
             boolean delete_item = result.getBoolean("delete_item");
             Software software_item = result.getParcelable("software");
             if (delete_item) {
@@ -249,8 +204,6 @@ public class LoadSoftwareTask extends AsyncTask<Void, Void, ArrayList<Software>>
                     Objects.requireNonNull(inventory_fragment_weak_reference.get().getView()).setBackgroundColor(Color.GRAY);
 
                 }
-
-                Log.d(TAG, "SoftwareAdapter DELETED");
             }
         });
 
