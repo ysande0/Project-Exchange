@@ -174,11 +174,8 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
         hardware_platform_spinner_weak_reference.get().setAdapter(adapter);
         hardware_platform_spinner_weak_reference.get().setSelection(INDEX);
 
-        //hardware_recycle_view_adapter.set_app(app);
-        //hardware_recycle_view_adapter.set_hardware_library_dialog(hardware_library_dialog);
         hardware_recycle_view_adapter.set_progress_bar(no_hardware_available_textView_id_weak_references.get(),
                 hardware_display_section_linear_layout_weak_references.get(), progress_bar_weak_references.get(), add_hardware_platform_button_weak_references.get());
-   //     Log.d(TAG,  this.user_interface.name() + " Index: " + INDEX + "  Default Value " + software_platform_spinner.getSelectedItem().toString());
 
         hardware_platform_spinner_weak_reference.get().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -202,8 +199,6 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
             public void onNothingSelected(AdapterView<?> parent) {
 
-                Log.d(TAG, user_interface.name() + " Nothing has been selected");
-
                 hardware_platform_spinner_weak_reference.get().setSelection(INDEX);
             }
 
@@ -212,10 +207,6 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
         add_hardware_platform_button_weak_references.get().setOnClickListener(view -> {
 
-            /*
-            if(user_platforms.contains(context.getResources().getString(R.string.no_hardware_available_label)))
-                return;
-*/
             Hardware hardware = new Hardware();
             hardware.platform = current_platform;
             hardware.manufacturer = current_manufacturer;
@@ -230,7 +221,7 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
                     if (hardwares.get(i).platform.equals(hardware.platform)) {
 
 
-                        Log.d(MSG, "At index: " + hardwares.indexOf(hardware));
+              
                         progress_bar_weak_references.get().setVisibility(View.GONE);
                         add_hardware_platform_button_weak_references.get().setEnabled(true);
                         return;
@@ -307,8 +298,7 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
                                         }
 
                                         Bundle bundle = new Bundle();
-
-                                        // Most likely newly registered
+                                        
                                         if((UserSettings.get_latitude(context_weak_reference.get()).isEmpty() || UserSettings.get_longitude(context_weak_reference.get()).isEmpty()) || (UserSettings.get_latitude(context_weak_reference.get()) == null || UserSettings.get_longitude(context_weak_reference.get()) == null))
                                             return;
 
@@ -347,7 +337,7 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
                             Toast.makeText(context_weak_reference.get(),
                                     "Timeout error occurred! Logging Out",
                                     Toast.LENGTH_LONG).show();
-                           // launch_logout_activity();
+                
                         }
                     }
                 }
@@ -357,37 +347,16 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
 
     }
-/*
-    private void launch_logout_activity(){
 
-        app.set_is_user_logged_in(false);
-        app.set_location_permission(false);
-
-        UserSettings.set_is_user_logged_in(context_weak_reference.get(), false);
-        UserSettings.remove_user_token(context_weak_reference.get());
-
-        Intent intent = new Intent(context_weak_reference.get(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context_weak_reference.get().startActivity(intent);
-        this.hardware_library_dialog.dismiss();
-
-    }
-*/
     private void load_user_available_hardware(ArrayList<Hardware> hardwares) {
 
         final String MSG = "TAG";
-        Log.d(TAG, "Loading hardware: " + hardwares.size());
-
-        if(this.context_weak_reference.get() == null)
-            Log.d(TAG, "Context is null");
-        else if(this.context_weak_reference.get() != null)
-            Log.d(TAG, "Context is NOT null");
 
         ArrayList<String> user_platforms = new ArrayList<>();
         for (int i = 0; i < hardwares.size(); i++) {
 
             user_platforms.add(hardwares.get(i).platform);
-            Log.d(MSG, "Platform: " + user_platforms.get(i));
+      
 
         }
 
@@ -395,12 +364,8 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
 
             INDEX = user_platforms.indexOf(software.platform);
-           // Toast.makeText(context, "--> index: " + INDEX + " Platform: " + software.platform, Toast.LENGTH_LONG).show();
-            Log.d(MSG, "Software_Profile_Dialog: " + "--> index: " + INDEX + " Platform: " + software.platform);
+      
         }
-
-     //   Toast.makeText(context, this.user_interface.name() + " <-> index: " + INDEX + " Platform: " + software.platform, Toast.LENGTH_LONG).show();
-        Log.d(MSG, "Window: " + this.user_interface.name());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context_weak_reference.get(), R.layout.spinner_item, user_platforms);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -413,15 +378,9 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
                         software.platform = parent.getItemAtPosition(position).toString();
                         software_platform_spinner_weak_reference.get().setSelection(position);
-                        /*
-                        String platform = context_weak_reference.get().getResources().getString(R.string.user_profile_software_platform_label) + parent.getItemAtPosition(position).toString();
-                        software_platform_textView_weak_reference.get().setText(platform);
-*/
                 }
 
                 public void onNothingSelected(AdapterView<?> parent) {
-
-                    Log.d(MSG, user_interface.name() + " Nothing has been selected");
 
                     software_platform_spinner_weak_reference.get().setSelection(INDEX);
 
@@ -444,15 +403,9 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
             String hardware_manufacturer = queried_hardware.get(i).get_manufacturer();
             String hardware_platform = queried_hardware.get(i).get_platform();
 
-            Log.d(TAG, "Manufacturer: " + hardware_manufacturer + "  Platform: " + hardware_platform);
             Hardware hardware = new Hardware(hardware_manufacturer, hardware_platform);
             user_hardware.add(hardware);
         }
-
-        if(user_hardware.isEmpty())
-            Log.d(TAG, "LoadUserHardTask: ArrayList<Hardware> is empty");
-        else
-            Log.d(TAG, "LoadUserHardTask: ArrayList<Hardware> is NOT empty");
 
         return user_hardware;
     }
@@ -462,8 +415,6 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
         super.onPostExecute(hardwares);
 
         if(this.user_interface == UserInterface.HARDWARE_INVENTORY_ACTIVITY){
-
-            Log.d(TAG, "USER INTERFACE: HardwareInventoryActivity");
             load_hardware_platform(hardwares);
         }
 
@@ -474,7 +425,6 @@ public class LoadUserHardwareTask extends AsyncTask<Void, Void, ArrayList<Hardwa
 
         if(this.user_interface == UserInterface.INVENTORY_IN_FRAGMENT  || this.user_interface == UserInterface.SOFTWARE_PROFILE_DIALOG){
 
-            Log.d(TAG, "USER INTERFACE: InventoryInFragment " + hardwares.size());
             load_user_available_hardware(hardwares);
 
         }
