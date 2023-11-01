@@ -56,35 +56,28 @@ public class MyConversationsTask extends AsyncTask<MyConversations, Void, Void> 
     protected Void doInBackground(MyConversations... myConversations) {
 
         if(this.database_operations == DatabaseOperations.INSERT){
-            Log.d(TAG, "MyConversationsTask INSERT");
             this.my_conversation_dao.insert(this.my_conversations);
         }
         else if(this.database_operations == DatabaseOperations.DELETE){
 
-            Log.d(TAG, "MyConversationsTask DELETE");
             this.my_conversation_dao.delete_title(this.conversation_id);
 
         }
         else if(this.database_operations == DatabaseOperations.UPDATE){
 
-            Log.d(TAG, "MyConversationsTask UPDATE");
             if(update_type == 1) {
 
-                Log.d(TAG, "MyConversationsTask UPDATE: is_read");
                 this.my_conversation_dao.update_is_read(conversation_id, true);
 
             }
             else if(update_type == 2){
-
-                Log.d(TAG, "MyConversationsTask UPDATE: message_delivered");
+                
                 this.my_conversation_dao.update_message_delivered(conversation_id, message_id, this.message_delivered);
 
             }
 
-
         }
-
-
+        
         return null;
     }
 
