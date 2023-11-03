@@ -8,14 +8,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-/*
-*  Will primarily be used by Sync Adapters which means the home table will be the main focus.
-*
-* */
-
 public class SyncContentProvider extends ContentProvider {
-
-    // NOTE: if problems arise, remove syncprovider and just use the package name
 
     private static final String TAG = "MSG";
     public SyncContentProvider(){
@@ -25,13 +18,11 @@ public class SyncContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-
-        Log.d(TAG, "SyncContentProvider onCreate");
+        
         return false;
     }
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
 
        return 0;
     }
