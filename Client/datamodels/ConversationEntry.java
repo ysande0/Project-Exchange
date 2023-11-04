@@ -13,7 +13,7 @@ public class ConversationEntry implements Parcelable {
     public Users recipient_user = new Users();
     public String transaction_id;
     public String conversation_id;
-    public Message recent_message = new Message(); // <-- Object has time and date
+    public Message recent_message = new Message(); 
     private String recent_user_image_url;
     public Software software = new Software();
 
