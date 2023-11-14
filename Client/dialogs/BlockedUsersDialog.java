@@ -86,7 +86,6 @@ public class BlockedUsersDialog extends DialogFragment {
     public void onPause() {
         super.onPause();
 
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
