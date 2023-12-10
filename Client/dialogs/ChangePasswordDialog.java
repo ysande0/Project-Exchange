@@ -66,13 +66,7 @@ public class ChangePasswordDialog extends DialogFragment {
         progress_bar = view.findViewById(R.id.settings_progress_bar_circular_id);
         progress_bar.setVisibility(View.GONE);
         Button save_password_button = view.findViewById(R.id.setting_save_password_button_id);
-
-        //FirebaseAuth firebase_auth = FirebaseAuth.getInstance();
-        //FirebaseUser firebase_user = firebase_auth.getCurrentUser();
-
-
-        //Log.d(TAG, "[ChangePasswordDialog] Current user:  " + firebase_user.getUid());
-
+    
         if (savedInstanceState != null) {
 
             password = savedInstanceState.getString(context.getResources().getString(R.string.password_key));
@@ -163,7 +157,6 @@ public class ChangePasswordDialog extends DialogFragment {
     public void onPause() {
         super.onPause();
 
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
