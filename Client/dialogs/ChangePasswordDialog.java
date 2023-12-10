@@ -162,8 +162,6 @@ public class ChangePasswordDialog extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "ChangePasswordDialog onDestroyView");
-
 
     }
 }
