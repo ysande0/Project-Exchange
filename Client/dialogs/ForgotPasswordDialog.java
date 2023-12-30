@@ -36,20 +36,14 @@ public class ForgotPasswordDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        Log.d(TAG, "ForgotPasswordDialog onAttach");
-
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "ForgotPasswordDialog onCreate");
-
         firebase_auth = FirebaseAuth.getInstance();
-
-        //forgot_password_dialog_view_model = ViewModelProviders.of(this).get(ForgotPasswordDialogViewModel.class);
+        
         forgot_password_dialog_view_model = new ViewModelProvider(this).get(ForgotPasswordDialogViewModel.class);
     }
 
@@ -84,8 +78,6 @@ public class ForgotPasswordDialog extends DialogFragment {
             String email = email_editText.getText().toString();
 
             if(email.isEmpty()){
-
-                Log.d(TAG, "Email is empty");
                 email_editText.setError(getResources().getString(R.string.register_email_address_edittext_error));
                 return;
             }
@@ -124,15 +116,12 @@ public class ForgotPasswordDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        Log.d(TAG, "ForgotPasswordDialog onStart");
+        
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.d(TAG, "ForgotPasswordDialog onResume");
         Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -149,36 +138,27 @@ public class ForgotPasswordDialog extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        Log.d(TAG, "ForgotPasswordDialog onPause");
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        Log.d(TAG, "ForgotPasswordDialog onStop");
+        
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        Log.d(TAG, "ForgotPasswordDialog onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Log.d(TAG, "ForgotPasswordDialog onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-        Log.d(TAG, "ForgotPasswordDialog onDetach");
     }
 }
