@@ -38,8 +38,6 @@ public class HardwareLibraryDialog extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        Log.d(TAG, "HardwareLibraryDialog onAttach");
         this.context = context;
     }
 
@@ -47,17 +45,12 @@ public class HardwareLibraryDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "HardwareLibraryDialog onCreate");
-
-       // hardware_library_dialog_view_model = ViewModelProviders.of(this).get(HardwareLibraryDialogViewModel.class);
         hardware_library_dialog_view_model = new ViewModelProvider(this).get(HardwareLibraryDialogViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        Log.d(TAG, "HardwareLibraryDialog onCreateView");
 
         App app = ((App) context.getApplicationContext());
         View view = inflater.inflate(R.layout.dialog_hardware_library, container, false);
@@ -86,26 +79,11 @@ public class HardwareLibraryDialog extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        Log.d(TAG, "HardwareLibraryDialog onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "HardwareLibraryDialog onResume");
-
-        /*
-        Window window = getDialog().getWindow();
-        if(window == null)
-            return;
-
-        WindowManager.LayoutParams window_params = window.getAttributes();
-        window_params.width = 800;
-        window_params.height = 800;
-
-        window.setAttributes(window_params);
-
-         */
 
         Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -115,22 +93,17 @@ public class HardwareLibraryDialog extends DialogFragment {
     public void onPause() {
         super.onPause();
 
-        Log.d(TAG, "HardwareLibraryDialog onPause");
-
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        Log.d(TAG, "HardwareLibraryDialog onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "HardwareLibraryDialog onDestroy");
 
         hardware_platform_recycle_view.setAdapter(null);
 
@@ -140,14 +113,11 @@ public class HardwareLibraryDialog extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "HardwareLibraryDialog onDestroyView");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-        Log.d(TAG, "HardwareLibraryDialog onDetach");
     }
 
 }
