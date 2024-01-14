@@ -39,7 +39,6 @@ public class ImageViewerDialog extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.d(TAG, "ImageViewerDialog onAttach");
 
         this.context = context;
     }
@@ -47,20 +46,6 @@ public class ImageViewerDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "ImageViewerDialog onCreate");
-        /*
-        if(getArguments() != null) {
-            Bundle image_bundle = getArguments();
-            image_bitmap = image_bundle.getParcelable("image_bitmap");
-        }
-
-        if(savedInstanceState != null){
-
-            image_bitmap = savedInstanceState.getParcelable("image_bitmap");
-        }
-*/
-
 
         if(getArguments() != null) {
             Bundle image_bundle = getArguments();
@@ -77,8 +62,7 @@ public class ImageViewerDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        Log.d(TAG, "ImageViewerDialog onCreateView");
+        
         View view = inflater.inflate(R.layout.dialog_image_viewer, container, false);
 
          image_viewer = view.findViewById(R.id.image_viewer_id);
@@ -136,13 +120,10 @@ public class ImageViewerDialog extends DialogFragment {
                             target_image_height = 2000;
 
                         }
-
-                        Log.d(TAG, "[ImageViewerDialog] Target Width: " + target_image_width + "  Height: " + target_image_height);
+                        
                         image_bitmap = drawable_to_bitmap(resource);
 
-                        Log.d(TAG, "[ImageViewerDialog] Before Image Width: " + image_bitmap.getWidth() + "  Height: " + image_bitmap.getHeight());
                         image_bitmap = image_saver.decode_image_from_encode(image_saver.encoded_bitmap(image_bitmap, QUALITY), target_image_width, target_image_height);
-                        Log.d(TAG, "[ImageViewerDialog] After Image Width: " + image_bitmap.getWidth() + "  Height: " + image_bitmap.getHeight());
                         image_viewer.setImageBitmap(image_bitmap);
                     }
 
@@ -153,7 +134,6 @@ public class ImageViewerDialog extends DialogFragment {
 
                 });
 
-       // image_viewer.setImageBitmap(image_bitmap);
         image_viewer_clear_dialog_button.setOnClickListener(v -> dismiss());
 
 
@@ -186,29 +166,24 @@ public class ImageViewerDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        Log.d(TAG, "ImageViewerDialog onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Log.d(TAG, "ImageViewerDialog onResume");
         Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "ImageViewerDialog onPause");
-        //Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
-        Log.d(TAG, "ImageViewerDialog onSaveInstanceState");
 
         out_state.putString("image_full_url", image_full_url);
     }
@@ -216,28 +191,24 @@ public class ImageViewerDialog extends DialogFragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "ImageViewerDialog onStop");
 
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(TAG, "ImageViewerDialog onDestroyView");
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "ImageViewerDialog onDestroy");
-
-//      Glide.with(this.context).clear(target);
         image_viewer.setImageResource(0);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d(TAG, "ImageViewerDialog onDetach");
+
     }
 }
