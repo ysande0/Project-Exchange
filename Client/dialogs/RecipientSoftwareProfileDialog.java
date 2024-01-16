@@ -51,15 +51,12 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        Log.d(TAG, "SoftwareProfileDialog onAttach");
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle saved_instance_state) {
         super.onCreate(saved_instance_state);
-
-        Log.d(TAG, "SoftwareProfileDialog onCreate");
+        
         if(getArguments() != null) {
             Bundle software_bundle = getArguments();
 
@@ -72,7 +69,6 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
             software = saved_instance_state.getParcelable("software");
 
 
-       // @SuppressWarnings("unused") SoftwareProfileDialogViewModel software_profile_dialog_view_model = ViewModelProviders.of(this).get(SoftwareProfileDialogViewModel.class);
         @SuppressWarnings("unused") SoftwareProfileDialogViewModel software_profile_dialog_view_model = new ViewModelProvider(this).get(SoftwareProfileDialogViewModel.class);
 
     }
@@ -81,7 +77,7 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d(TAG, "SoftwareProfileDialog onCreateView");
+
         View view = inflater.inflate(R.layout.dialog_recipient_software_profile_dialog, container, false);
 
 
@@ -123,22 +119,13 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
 
     private void render_software_image() {
 
-
-        //noinspection ConstantConditions
         Glide.with(getActivity()).asDrawable()
                 .load(software.software_image_thumbnail_url)
                 .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
                 .into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                //noinspection ConstantConditions
-                if(resource == null)
-                    Log.d(TAG, "[RecipientSoftwareProfileDialog] RESOURCE IS NULL");
-                else //noinspection ConstantConditions
-                    if(resource != null)
-                    Log.d(TAG, "[RecipientSoftwareProfileDialog] RESOURCE IS NOT NULL");
-
+                
 
                 Bitmap source_bitmap = drawable_to_bitmap(resource);
                 Bitmap round_bitmap  = Bitmap.createBitmap(source_bitmap.getWidth(), source_bitmap.getHeight(), source_bitmap.getConfig());
@@ -185,13 +172,12 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "SoftwareProfileDialog onStart");
+ 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "SoftwareProfileDialog onResume");
 
         Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
@@ -199,16 +185,11 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "SoftwareProfileDialog onPause");
-
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
-
-        Log.d(TAG, "SoftwareProfileDialog onSaveInstanceState");
 
         out_state.putParcelable("software", software);
 
@@ -217,29 +198,23 @@ public class RecipientSoftwareProfileDialog extends DialogFragment {
     @Override
     public void onStop() {
         super.onStop();
-
-        Log.d(TAG, "SoftwareProfileDialog onStop");
+        
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        Log.d(TAG, "SoftwareProfileDialog onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Log.d(TAG, "SoftwareProfileDialog onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
 
-        Log.d(TAG, "SoftwareProfileDialog onDetach");
     }
 
 }
