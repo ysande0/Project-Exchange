@@ -95,7 +95,6 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
         // noinspection ConstantConditions
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        //register_activity_view_model = ViewModelProviders.of(this).get(RegisterActivityViewModel.class);
         register_activity_view_model = new ViewModelProvider(this).get(RegisterActivityViewModel.class);
 
         firebase_auth = FirebaseAuth.getInstance();
@@ -176,7 +175,7 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
             flag_error = validate_email(email_address);
             flag_error = validate_birthday(date_of_birth);
 
-            Log.d(TAG, "[RegisterDialog] Validate Birthday: " + flag_error);
+     
             if(first_name.isEmpty()){
 
                 flag_error = true;
@@ -203,7 +202,7 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
                 flag_error = true;
                 DateOfBirth_editText.setError(getResources().getString(R.string.register_date_of_birthday_edittext_error));
                 Toast.makeText(this.context, getResources().getString(R.string.register_date_of_birthday_edittext_error), Toast.LENGTH_LONG).show();
-                Log.d(TAG, "[RegisterDialog] Date of birth is empty. Error will occur");
+            
             }
 
             if(password.isEmpty()){
@@ -230,15 +229,6 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
                 Retype_Password_editText.setError(getResources().getString(R.string.register_password_matching_error));
                 flag_error = true;
             }
-
-
-            if(flag_error) {
-                Log.d(TAG, "[RegisterDialog] An error occurred");
-                return;
-            }
-            else
-                Log.d(TAG, "[RegisterDialog] An error did not occur");
-
 
 
              Toast.makeText(context, "Processing...", Toast.LENGTH_LONG).show();
@@ -293,14 +283,11 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
             DateOfBirth_editText.setError(getResources().getString(R.string.register_date_of_birthday_edittext_error));
             return true;
         }
-
-        Log.d(TAG, "Birthday in milliseconds: " + calendar.getTimeInMillis());
+        
         date_of_birth_ms = String.valueOf(calendar.getTimeInMillis());
         int birth_year = calendar.get(Calendar.YEAR);
         int birth_month = calendar.get(Calendar.MONTH) + 1;
         int birth_day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        Log.d(TAG, "[RegisterDialog] birthday: " + birth_month + "/" + birth_day + "/" + birth_year);
 
        // String current_time = Calendar.getInstance().getTime().toString();
         Date current_date = Calendar.getInstance().getTime();
@@ -310,12 +297,9 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
         int current_month = calendar.get(Calendar.MONTH) + 1;
         int current_day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        Log.d(TAG, "[RegisterDialog] Todays date: " + current_month + "/" + current_day + "/" + current_year);
         int age = (current_year - birth_year);
-
-        Log.d(TAG, "[RegisterDialog] Age: " + age + " years old");
+        
         if(age < 18){
-            Log.d(TAG, "[RegisterDialog] You do not meet age requirement at " + age + " years old");
             DateOfBirth_editText.setError(getResources().getString(R.string.register_age_requirement_edittext_error));
             Toast.makeText(this.context, getResources().getString(R.string.register_age_requirement_edittext_error), Toast.LENGTH_LONG).show();
             return true;
@@ -324,8 +308,7 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
         if(age == 18){
 
             if(current_month < birth_month){
-
-                Log.d(TAG, "[RegisterDialog] You do not meet age requirement as the month is  " +  current_month + " and birth month is " + birth_month);
+                
                 DateOfBirth_editText.setError(getResources().getString(R.string.register_age_requirement_edittext_error));
                 Toast.makeText(this.context, getResources().getString(R.string.register_age_requirement_edittext_error), Toast.LENGTH_LONG).show();
                 return true;
@@ -335,8 +318,7 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
             if(current_month == birth_month){
 
                 if(current_day < birth_day){
-
-                    Log.d(TAG, "[RegisterDialog] You do not meet age requirement as the day is " + current_day + " and birth day is " + birth_day);
+                    
                     DateOfBirth_editText.setError(getResources().getString(R.string.register_age_requirement_edittext_error));
                     Toast.makeText(this.context, getResources().getString(R.string.register_age_requirement_edittext_error), Toast.LENGTH_LONG).show();
                     return true;
@@ -362,13 +344,13 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
     public void onStart() {
         super.onStart();
 
-        Log.d(TAG, "RegisterDialog onStart");
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "RegisterDialog onResume");
+
 
         requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
@@ -376,7 +358,6 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "RegisterDialog onPause");
 
        // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
@@ -385,35 +366,32 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
     public void onSaveInstanceState(@NonNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
 
-        Log.d(TAG, "RegisterDialog onSaveInstanceState");
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        Log.d(TAG, "RegisterDialog onStop");
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
-        Log.d(TAG, "RegisterDialog onDestroyView");
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "RegisterDialog onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-        Log.d(TAG, "RegisterDialog onDetach");
+        
     }
 
 
