@@ -69,8 +69,7 @@ public class RegisterDialog extends DialogFragment implements DatePickerDialog.O
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        Log.d(TAG, "RegisterDialog onAttach");
+        
         this.context = context;
 
     }
