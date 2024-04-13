@@ -68,15 +68,12 @@ public class SoftwareProfileDialog extends DialogFragment {
     private Software software = new Software();
     private int position;
 
-   // private static final int REQUEST_UPC_IMAGE_CAPTURE = 1;
-   // private static final int REQUEST_SOFTWARE_IMAGE_CAPTURE = 2;
-   // private static final int REQUESTED_CAMERA_PERMISSION = 200;
+
     private ImageView software_imageView;
 
     private EditText software_title_editText;
     private EditText software_publisher_editText;
     private EditText software_developer_editText;
-   // private TextView software_platform_textView;
     private Spinner software_platform_spinner;
     private EditText software_upc_editText;
     private EditText software_user_description_editText;
@@ -87,10 +84,8 @@ public class SoftwareProfileDialog extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        Log.d(TAG, "SoftwareProfileDialog onAttach");
+        
         this.context = context;
-
 
     }
 
@@ -104,7 +99,6 @@ public class SoftwareProfileDialog extends DialogFragment {
         app.set_inventory_fragment_foreground(false);
         app.set_software_profile_dialog_foreground(true);
 
-        Log.d(TAG, "SoftwareProfileDialog onCreate");
         software_profile_dialog_view_model = new ViewModelProvider(this).get(SoftwareProfileDialogViewModel.class);
 
         if(getArguments() != null) {
@@ -115,18 +109,7 @@ public class SoftwareProfileDialog extends DialogFragment {
             getArguments().clear();
         }
 
-/*
-        if(saved_instance_state != null) {
-          //  software = saved_instance_state.getParcelable("software");
-           // position = saved_instance_state.getInt("position");
-
-            software = software_profile_dialog_view_model.get_software();
-            position = software_profile_dialog_view_model.get_position();
-        }
-*/
         image_saver = new ImageSaver();
-
-       // software_profile_dialog_view_model = ViewModelProviders.of(this).get(SoftwareProfileDialogViewModel.class);
 
     }
 
@@ -134,12 +117,10 @@ public class SoftwareProfileDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d(TAG, "SoftwareProfileDialog onCreateView");
+
         View view = inflater.inflate(R.layout.dialog_software_profile,container, false);
 
         fragment_manager = getParentFragmentManager();
-
-       // GestureDetector gesture_detector = new GestureDetector(this.context, new Gesture());
 
         ImageView software_clear_dialog_button = view.findViewById(R.id.software_dialog_clear_image_imageView_id);
         software_imageView = view.findViewById(R.id.software_dialog_image_imageView_id);
@@ -147,7 +128,6 @@ public class SoftwareProfileDialog extends DialogFragment {
         software_publisher_editText = view.findViewById(R.id.software_dialog_publisher_textView_id);
         software_developer_editText = view.findViewById(R.id.software_dialog_developer_textView_id);
         software_platform_spinner = view.findViewById(R.id.software_dialog_hardware_spinner_id);
-        //software_platform_textView = view.findViewById(R.id.software_dialog_platform_textView);
         software_upc_editText = view.findViewById(R.id.software_dialog_upc_textView_id);
         ImageButton software_upc_buttonView = view.findViewById(R.id.software_dialog_upc_capture_button_id);
         software_user_description_editText = view.findViewById(R.id.software_dialog_user_description_editText_id);
@@ -155,8 +135,7 @@ public class SoftwareProfileDialog extends DialogFragment {
         FloatingActionButton delete_floating_action_bar = view.findViewById(R.id.software_dialog_delete_float_button_id);
 
         if(savedInstanceState != null){
-
-            Log.d(TAG, "SoftwareProfileDialog ReCreate");
+            
             int preview_image_width = 0;
             int preview_image_height = 0;
 
@@ -246,7 +225,7 @@ public class SoftwareProfileDialog extends DialogFragment {
         software_publisher_editText.setText(software.game_publisher);
         software_developer_editText.setText(software.game_developer);
 
-        Log.d(TAG, "SoftwareProfileDialog: " + software.upc);
+
         load_hardware();
         software_upc_editText.setText(software.upc);
         software_user_description_editText.setText(software.user_description);
@@ -254,7 +233,6 @@ public class SoftwareProfileDialog extends DialogFragment {
 
 
             boolean flag_error = false;
-            Log.d(TAG, "Editing " + software.title + " by " + software.game_developer);
 
 
             if(!(UserSettings.get_encoded_bitmap_thumbnail(context.getApplicationContext()).isEmpty()))
@@ -271,19 +249,16 @@ public class SoftwareProfileDialog extends DialogFragment {
 
             try{
 
-                Log.d(TAG, "Updating....");
 
                 if(software_title_editText.getText().toString().trim().isEmpty()){
 
-                    Log.d(TAG, "[SoftwareProfileDialog] title is empty");
                     software_title_editText.setError(context.getString(R.string.software_title_edittext_error));
                     flag_error = true;
 
                 }
 
                 if(software_publisher_editText.getText().toString().trim().isEmpty()){
-
-                    Log.d(TAG, "[SoftwareProfileDialog] publisher is empty");
+                    
                     software_publisher_editText.setError(context.getString(R.string.software_publisher_edittext_error));
                     flag_error = true;
 
@@ -291,13 +266,12 @@ public class SoftwareProfileDialog extends DialogFragment {
 
                 if(software_developer_editText.getText().toString().trim().isEmpty()){
 
-                    Log.d(TAG, "[SoftwareProfileDialog] developer is empty");
                     software_developer_editText.setError(context.getString(R.string.software_developer_edittext_error));
                     flag_error = true;
                 }
 
                 if(software_upc_editText.getText().toString().trim().isEmpty()){
-                    Log.d(TAG, "[SoftwareProfileDialog] upc is empty");
+
                     software_upc_editText.setError(context.getString(R.string.software_upc_edittext_error));
                     flag_error = true;
 
@@ -317,7 +291,6 @@ public class SoftwareProfileDialog extends DialogFragment {
                 Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
                 int dpi_classification = display_metrics.densityDpi;
 
-                Log.d(TAG, "Software Dialog Profile URL: " + software.software_image_thumbnail_url);
                 JSONObject update_software_json = new JSONObject();
                 update_software_json.put(context.getResources().getString(R.string.category_label), 101);
                 update_software_json.put(context.getResources().getString(R.string.operation_label), 4);
@@ -330,7 +303,6 @@ public class SoftwareProfileDialog extends DialogFragment {
                 update_software_json.put(context.getResources().getString(R.string.user_description_key), software.user_description);
                 update_software_json.put(context.getResources().getString(R.string.software_image_name_full_key), software.bitmap_name_full);
                 update_software_json.put(context.getResources().getString(R.string.software_image_name_thumbnail_key), software.bitmap_name_thumbnail);
-               // update_software_json.put("image_name", software.bitmap_name);
                 update_software_json.put(context.getResources().getString(R.string.upc_key), software.upc);
                 update_software_json.put(context.getResources().getString(R.string.access_token_key), UserSettings.get_user_token(context));
                 update_software_json.put(context.getResources().getString(R.string.user_dpi_label), dpi_classification);
@@ -342,7 +314,6 @@ public class SoftwareProfileDialog extends DialogFragment {
                     update_software_json.put(context.getResources().getString(R.string.image_encoded_thumbnail_key), software.encoded_bitmap_thumbnail);
 
                 update_software_json.put(context.getResources().getString(R.string.software_uid_key), software.uid);
-             //   update_software_json.put("image_name", software.bitmap_name);
 
                 software_profile_dialog_view_model.update_software(software, update_software_json, SoftwareProfileDialog.this, fragment_manager, position);
                 dismiss();
@@ -360,7 +331,6 @@ public class SoftwareProfileDialog extends DialogFragment {
 
                 software.bitmap_name_thumbnail = software.uid + "_thumbnail" + ".jpg";
                 software.bitmap_name_full = software.uid + "_full" + ".jpg";
-                Log.d(TAG, "Deleting....");
                 JSONObject delete_software_json = new JSONObject();
                 delete_software_json.put(context.getResources().getString(R.string.category_label), 101);
                 delete_software_json.put(context.getResources().getString(R.string.operation_label), 2);
@@ -370,20 +340,6 @@ public class SoftwareProfileDialog extends DialogFragment {
                 delete_software_json.put(context.getResources().getString(R.string.software_image_full_url_key), software.software_image_full_url);
                 delete_software_json.put(context.getResources().getString(R.string.software_image_thumbnail_url_key), software.software_image_thumbnail_url);
                 delete_software_json.put(context.getResources().getString(R.string.software_uid_key), software.uid);
-/*
-
-                delete_software_json.put("title", software.title);
-                delete_software_json.put("publisher", software.game_publisher);
-                delete_software_json.put("developer", software.game_developer);
-                delete_software_json.put("platform", software.platform);
-                delete_software_json.put("description", software.user_description);
-                delete_software_json.put("image_name", software.bitmap_name);
-                delete_software_json.put("upc", software.upc);
-
-                delete_software_json.put("encoded_image", software.encoded_bitmap);
-                delete_software_json.put("image_name", software.bitmap_name);
-                 */
-
 
 
                 software_profile_dialog_view_model.delete_software(software, delete_software_json, SoftwareProfileDialog.this, fragment_manager ,position);
@@ -399,7 +355,6 @@ public class SoftwareProfileDialog extends DialogFragment {
 
      private void render_software_image() {
 
-         //software_imageView.setImageBitmap(software.software_bitmap);
          Glide.with(this.context).asDrawable()
                  .load(this.software.software_image_full_url)
                  .signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
@@ -415,8 +370,6 @@ public class SoftwareProfileDialog extends DialogFragment {
 
              @Override
              public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                 Log.d(TAG, "SoftwareProfileDialog RESOURCE IS NOT NULL");
 
                  int preview_image_width = 0;
                  int preview_image_height = 0;
@@ -496,59 +449,7 @@ public class SoftwareProfileDialog extends DialogFragment {
         drawable.draw(canvas);
         return bitmap;
     }
-/*
-    private void capture_image(){
 
-
-        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            //noinspection ConstantConditions
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUESTED_CAMERA_PERMISSION);
-            return;
-        }
-
-
-        Intent take_image = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(take_image.resolveActivity(context.getPackageManager()) != null)
-            startActivityForResult(take_image, REQUEST_SOFTWARE_IMAGE_CAPTURE);
-
-    }
-
-    private void capture_upc(){
-
-        Intent intent = new Intent(context, CameraActivity.class);
-        startActivityForResult(intent, REQUEST_UPC_IMAGE_CAPTURE);
-
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivity called...");
-        Log.d(TAG, "Request Code: " + requestCode + "    Result Code: " + resultCode );
-        if(requestCode == REQUEST_UPC_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Log.d(TAG, "Getting upc bitmap");
-
-
-            Bundle extras = data.getExtras();
-            assert extras != null;
-            this.software.upc = (String) extras.get("upc_data");
-            this.software_upc_editText.setText(this.software.upc);
-
-        }
-        else if(requestCode == REQUEST_SOFTWARE_IMAGE_CAPTURE && resultCode == RESULT_OK){
-
-            Bundle extras = data.getExtras();
-            assert extras != null;
-            software.software_bitmap = (Bitmap) extras.get("data");
-            assert software.software_bitmap != null;
-            software.encoded_bitmap = image_saver.encoded_bitmap(software.software_bitmap);
-            software.bitmap_name = software.uid + ".jpg";
-            software_imageView.setImageBitmap(software.software_bitmap);
-        }
-
-    }
-*/
 private final ActivityResultLauncher<String[]> permission_request_image = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
 
         result -> {
@@ -558,13 +459,10 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
                 //noinspection PointlessBooleanExpression
                 if(entry.getValue() == false){
 
-                    Log.d(TAG, "[SoftwareProfileDialog] " +  entry.getKey() + " is denied");
                     return;
                 }
             }
 
-            Log.d(TAG, "[SoftwareProfileDialog] Permissions granted. Launching Camera...");
-            // Launch Camera
             launch_camera();
 
         });
@@ -675,19 +573,10 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
                             final int QUALITY = 75;
                             software.software_bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), file_uri_captured);
                             software_imageView.setImageBitmap(image_saver.scale_bitmap(software.software_bitmap, preview_image_width, preview_image_height));
-                            Log.d(TAG, "[SoftwareProfileDialog] Bitmap Target image width: " + full_image_width + "  image height: " + full_image_height);
                             software.software_bitmap = image_saver.decode_image_from_file(UserSettings.get_user_local_software_image_path(context), full_image_width, full_image_height);
-                            Log.d(TAG, "[SoftwareProfileDialog] Bitmap Scaled image width: " + software.software_bitmap.getWidth() + "  image height: " + software.software_bitmap.getHeight());
-                          //  software.encoded_bitmap_full = image_saver.encoded_bitmap(software.software_bitmap, QUALITY);
-                          //  software.encoded_bitmap_thumbnail = image_saver.encoded_bitmap(image_saver.scale_bitmap(software.software_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY);
 
                             UserSettings.set_encoded_bitmap_thumbnail(context.getApplicationContext(), image_saver.encoded_bitmap(image_saver.scale_bitmap(software.software_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY));
                             UserSettings.set_encoded_bitmap_full(context.getApplicationContext(), image_saver.encoded_bitmap(software.software_bitmap, QUALITY));
-
-
-                            //  software.software_image_full_url = software.uid + ".jpg";
-                           // software.bitmap_name_thumbnail = software.uid + "_thumbnail" + ".jpg";
-                           // software.bitmap_name_full = software.uid + "_full" + ".jpg";
 
 
                         } catch (IOException e) {
@@ -711,8 +600,6 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
 
             if(uri_result != null) {
                 try {
-
-                    Log.d(TAG, "[SoftwareProfileDialog] Software Image Retrieved");
 
                     int full_image_width = 0;
                     int full_image_height = 0;
@@ -800,24 +687,13 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
 
                     }
 
-
-                    Log.d(TAG, "[SoftwareProfileDialog] Bitmap before image width: " + software.software_bitmap.getWidth() + "  image height: " + software.software_bitmap.getHeight());
-
                     final int QUALITY = 75;
                     software.software_bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri_result);
                     software_imageView.setImageBitmap(image_saver.scale_bitmap(software.software_bitmap, preview_image_width, preview_image_height));
-                    Log.d(TAG, "[SoftwareProfileDialog] Bitmap Target image width: " + full_image_width + "  image height: " + full_image_height);
                     software.software_bitmap = image_saver.decode_image_from_file(UserSettings.get_user_local_software_image_path(context), full_image_width, full_image_height);
-                    Log.d(TAG, "[SoftwareProfileDialog] Bitmap Scaled image width: " + software.software_bitmap.getWidth() + "  image height: " + software.software_bitmap.getHeight());
-                    //software.encoded_bitmap_full = image_saver.encoded_bitmap(software.software_bitmap, QUALITY);
-                    //software.encoded_bitmap_thumbnail = image_saver.encoded_bitmap(image_saver.scale_bitmap(software.software_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY);
 
                     UserSettings.set_encoded_bitmap_thumbnail(context.getApplicationContext(), image_saver.encoded_bitmap(image_saver.scale_bitmap(software.software_bitmap, thumbnail_image_width, thumbnail_image_height),  QUALITY));
                     UserSettings.set_encoded_bitmap_full(context.getApplicationContext(), image_saver.encoded_bitmap(software.software_bitmap, QUALITY));
-
-                    //  software.software_image_full_url = software.uid + ".jpg";
-                    //software.bitmap_name_thumbnail = software.uid + "_thumbnail" + ".jpg";
-                    //software.bitmap_name_full = software.uid + "_full" + ".jpg";
 
 
                 } catch (IOException error) {
@@ -825,7 +701,7 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
                 }
             }
             else {
-                Log.d(TAG, "[SoftwareProfileDialog] Software Image NOT Retrieved");
+
             }
 
 
@@ -858,7 +734,6 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
         if(ContextCompat.checkSelfPermission(this.context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this.context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-            // Launch Camera
             launch_camera();
         }
         else {
@@ -911,55 +786,14 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
        software_profile_dialog_view_model.load_hardware(software_platform_spinner, software);
     }
 
-/*
-    private class Gesture extends GestureDetector.SimpleOnGestureListener{
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            super.onLongPress(e);
-
-            PopupMenu software_image_popup_menu = new PopupMenu(context, software_imageView);
-            software_image_popup_menu.getMenuInflater().inflate(R.menu.software_image_popup_menu, software_image_popup_menu.getMenu());
-
-            software_image_popup_menu.setOnMenuItemClickListener(item -> {
-
-
-                switch(item.getItemId()){
-
-                    case R.id.menu_gallery_id:
-                        retrieve_gallery_image();
-                        software_image_popup_menu.dismiss();
-                        return true;
-
-                    case R.id.menu_camera_id:
-                        capture_image();
-                        software_image_popup_menu.dismiss();
-                        return true;
-
-
-
-                }
-
-                // profile_image_popup_menu.dismiss();
-                return true;
-            });
-
-            software_image_popup_menu.show();
-
-        }
-    }
-*/
-
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "SoftwareProfileDialog onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "SoftwareProfileDialog onResume");
 
         Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -968,19 +802,12 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "SoftwareProfileDialog onPause");
 
-      //  Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle out_state) {
         super.onSaveInstanceState(out_state);
-
-        Log.d(TAG, "SoftwareProfileDialog onSaveInstanceState");
-
-       // out_state.putParcelable("software", software);
-        //out_state.putInt("position", position);
 
         software_profile_dialog_view_model.set_software(software);
         software_profile_dialog_view_model.set_position(position);
@@ -991,7 +818,6 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
     public void onStop() {
         super.onStop();
 
-        Log.d(TAG, "SoftwareProfileDialog onStop");
         app.set_software_profile_dialog_foreground(false);
     }
 
@@ -999,21 +825,17 @@ private final ActivityResultLauncher<String[]> permission_request_image = regist
     public void onDestroyView() {
         super.onDestroyView();
 
-        Log.d(TAG, "SoftwareProfileDialog onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "SoftwareProfileDialog onDestroy");
-       // image_saver.delete_image_file(UserSettings.get_user_local_software_image_path(context));
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
-        Log.d(TAG, "SoftwareProfileDialog onDetach");
     }
 }
