@@ -59,8 +59,7 @@ class ChangePasswordFragment extends Fragment {
 
         setHasOptionsMenu(true);
         app = ((App) context.getApplicationContext());
-
-        //change_password_fragment_view_model = ViewModelProviders.of(this).get(ChangePasswordFragmentViewModel.class);
+        
         change_password_fragment_view_model = new ViewModelProvider(this).get(ChangePasswordFragmentViewModel.class);
     }
 
@@ -102,11 +101,6 @@ class ChangePasswordFragment extends Fragment {
             else {
 
                 Objects.requireNonNull(firebase_user).updatePassword(password).addOnCompleteListener(task -> {
-
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "[ChangePasswordFragment] Firebase Password Changed");
-                        //change_password_fragment_view_model.remote_server(context, progress_bar, password);
-                    }
 
                 });
 
