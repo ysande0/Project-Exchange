@@ -51,8 +51,6 @@ public class ConversationsFragment extends Fragment {
     @Override
     public void onAttach(@NotNull Context context){
         super.onAttach(context);
-
-        Log.d(TAG, "ConversationsFragment: onAttach");
         this.context = context;
 
     }
@@ -61,8 +59,6 @@ public class ConversationsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "ConversationsFragment: onCreate");
-
         App app = ((App) this.context.getApplicationContext());
         app.set_conversation_fragment_foreground(true);
         app.set_home_fragment_foreground(false);
@@ -70,7 +66,7 @@ public class ConversationsFragment extends Fragment {
         app.set_software_profile_dialog_foreground(false);
 
         should_reload_messages = false;
-        //conversations_fragment_view_model = ViewModelProviders.of(getActivity()).get(ConversationsFragmentViewModel.class);
+      
         conversations_fragment_view_model = new ViewModelProvider(this).get(ConversationsFragmentViewModel.class);
 
         conversation_entry = new ConversationEntry();
@@ -78,8 +74,6 @@ public class ConversationsFragment extends Fragment {
         conversation_entry.current_user.first_name = UserSettings.get_user_first_name(this.context.getApplicationContext());
         conversation_entry.current_user.user_image_thumbnail_url = UserSettings.get_user_profile_image_thumbnail_url(this.context.getApplicationContext());
         conversation_entry.current_user.user_image_full_url = UserSettings.get_user_profile_image_full_url(this.context.getApplicationContext());
-
-     //  cancel_notifications();
     }
 
     @Override
@@ -87,12 +81,9 @@ public class ConversationsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_conversations, container, false);
 
-        Log.d(TAG, "ConversationsFragment: onCreateView");
-        Log.d(TAG, "ConversationsFragment pid: " + android.os.Process.myPid());
         conversations_entry_recycle_view = view.findViewById(R.id.conversations_recycleView_id);
         TextView no_messages_available_textView = view.findViewById(R.id.no_messages_available_textView_id);
         FrameLayout conversations_fragment_frame_layout = view.findViewById(R.id.conversations_fragment_framelayout_id);
-       // ConversationsFragment conversations_fragment = new ConversationsFragment();
         conversations_fragment_view_model.load_recent_messages(this.context, Glide.with(this), conversations_fragment_frame_layout, conversations_entry_recycle_view, no_messages_available_textView, conversations_entry_adapter,
                 UserInterface.CONVERSATIONS_FRAGMENT, conversation_entry);
 
@@ -105,8 +96,6 @@ public class ConversationsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Log.d(TAG, "ConversationsFragment: onStart");
-
 
     }
 
@@ -114,8 +103,6 @@ public class ConversationsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.d(TAG, "ConversationsFragment: onResume");
 
         if(should_reload_messages)
             conversations_fragment_view_model.update_conversation_adapter(main_handler);
@@ -148,26 +135,17 @@ public class ConversationsFragment extends Fragment {
 
     public void onSaveInstanceState(@NotNull Bundle out_state){
         super.onSaveInstanceState(out_state);
-
-        Log.d(TAG, "ConversationsFragment: onSaveInstanceState");
-
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Log.d(TAG, "ConversationsFragment: onPause");
-       // Objects.requireNonNull(getActivity()).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        Log.d(TAG, "ConversationsFragment: onStop");
 
         should_reload_messages = true;
 
@@ -177,8 +155,6 @@ public class ConversationsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        Log.d(TAG, "ConversationsFragment: onDestroyView");
 
         EventBus.getDefault().unregister(this);
         conversations_fragment_view_model.cancel_load_recent_message();
@@ -190,9 +166,6 @@ public class ConversationsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-       // app.set_conversation_fragment_foreground(false);
-        Log.d(TAG, "ConversationsFragment: onDestroy");
-
     }
 
 
@@ -200,7 +173,5 @@ public class ConversationsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
-        Log.d(TAG, "ConversationsFragment: onDetach");
     }
 }
